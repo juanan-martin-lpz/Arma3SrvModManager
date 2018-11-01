@@ -1,0 +1,55 @@
+module DoceBDIFileWork (readJSON,
+                        parseFicherosJson,
+                        parseRepositoriesJson,
+                        readServidores2Txt) where
+
+  import DoceBDIData
+  import System.IO as F
+  import Control.Exception
+
+  import Data.Aeson
+  import Data.Maybe
+  import Data.ByteString.Lazy.Char8 as BS
+  import Data.Text
+
+  readJSON :: String -> IO ByteString
+  readJSON fname = do BS.readFile fname
+
+  parseFicherosJson:: ByteString -> IO (Maybe [Ficheros])
+  parseFicherosJson content = do
+    let setm = decode content    -- setm = Maybe Ficheros || Nothing
+    return setm      -- return IO (Maybe Ficheros)
+
+
+  parseRepositoriesJson:: ByteString -> IO (Maybe [Repositories])
+  parseRepositoriesJson content = do
+    let setm = decode content    -- setm = Maybe Ficheros || Nothing
+    return setm      -- return IO (Maybe Ficheros)
+
+  readServidores2Txt :: String -> IO String
+  readServidores2Txt fname = do
+    let content = F.readFile fname
+    content
+
+  createServidor :: [String] -> Servidores
+  createServidor (v:n:i:p:m:[]) =
+    Servidor v n i p m
+
+  parseServidor :: String -> Servidores
+  parseServidor s =
+    createServidor $ wordsWhen (=='|') s
+
+
+  -- From StackOverflow (https://stackoverflow.com/questions/4978578/how-to-split-a-string-in-haskell)
+
+  wordsWhen     :: (Char -> Bool) -> String -> [String]
+  wordsWhen p s =  case Prelude.dropWhile p s of
+                        "" -> []
+                        s' -> w : wordsWhen p s''
+                              where (w, s'') = Prelude.break p s'
+  -- createWorkingTree :: String -> IO Entry
+  -- createWorkingTree startDir =
+    -- Leer la estructura de la carpeta
+    -- Por cada DirectoryEntry
+        -- Entrar e iniciar proceso
+    -- Crear Entries

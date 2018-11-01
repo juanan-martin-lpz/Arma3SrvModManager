@@ -1,0 +1,38 @@
+ESTRUCTURAS DE DATOS
+
+  ficheros.json             -> Completo
+  repositories.json         -> Completo
+  contents.json             -> Sin iniciar
+  settings.json             -> Completo         -- Faltaria ver que opciones mas hay que poner
+  Servidores2.txt           -> Sin iniciar
+  modorder.txt              -> Sin iniciar
+
+TAREAS
+
+  Generacion de Hashes xx   -> Sin iniciar
+  Comprobacion de Hashes xx -> Sin iniciar
+  Generacion de Diff/Patch  -> Sin iniciar
+  Aplicacion de Patches     -> Sin iniciar
+  Copia de Archivos         -> Sin iniciar
+  Borrado de Archivos       -> Sin iniciar
+  Borrado de Carpetas       -> Sin iniciar
+  Creacion de Carpetas      -> Sin iniciar
+  Descarga de Archivos      -> Sin iniciar
+  Ejecucion de Programas    -> Basico
+  Detencion de Programas    -> Sin iniciar
+  Control de Programas      -> Sin iniciar
+  Control de Concurrencia   -> Sin iniciar
+  Generador de Versiones    -> Sin iniciar
+  Comprobador de Versiones  -> Sin iniciar
+  Lenguaje de Apoyo         -> Sin iniciar
+  Interprete Len. Apo.      -> Sin iniciar
+  *Soporte Javascript       -> Sin iniciar      -- Opcionales
+  *Extensiones QML          -> Sin iniciar
+
+NOTAS
+
+LEAP (Lenguaje de Apoyo)
+
+  Se requiere un lenguaje capaz de ejecutar las tareas soportadas por la libreria, de corte imperativo y para scripts mas bien pequenos.
+  Contaria con un Parser/Lexer y un Interprete o VM
+  Tendria que tener algun mecanismo de seguridad para asegurarse que los scripts ejecutados provienen de una fuete fiable.

@@ -1,0 +1,14 @@
+3|Vietnam|188.165.254.137|2372|Vietnam|%Esenciales;@unsung-Workshop;@HueyPack-8.3.2015;PreyKhmaoch-Workshop;%Mapas:vietnam
+
+3|Servidor con Addons esenciales|188.165.254.137|2352|Esenciales|@CBA-Workshop;@ace3-Workshop;@acex-Workshop;@TFAR-Workshop;@alive-Workshop;@ares-1.8.1
+
+3|Servidor RHS|188.165.254.137|2392|RHS|%Esenciales;@RHS_AFRF-Workshop;@RHS_USF-Workshop;@RHS_GREF-Workshop;@rhs_ace_afrf-Workshop;@rhs_ace_gref-Workshop;@rhs_ace_usf-Workshop;%Otros;%Mapas
+
+#3|Servidor RHS - Minas|188.165.254.137|2411|Testing|%Esenciales;@RHS_AFRF-Workshop;@RHS_USF-Workshop;@RHS_GREF-Workshop;@rhs_ace_afrf-Workshop;@rhs_ace_gref-Workshop;@rhs_ace_usf-Workshop;%Otros;%Mapas;%Mayne-Testing
+
+#3|Servidor CUP|188.165.254.137|2322|CUP|%Esenciales;@CUP_Weapons-Workshop;@CUP_Units-Workshop;@CUP_Vehicles-Workshop;@CUP_ACE_Weapons-Workshop;@CUP_ACE_Vehicles-Workshop;%Otros:noleights;%Mapas
+
+#@CUP_Terrains-1.3.0;@Fata-1.0;@Kunduz-1.20;@Nziwasogo-0.97;@Beketov-0.9.b;@Helvantis-1.2
+
+3|Segunda Guerra Mundial|188.165.254.137|2322|2GM|%Esenciales:2gm;@CUP_TERRAINS_CORE;@CUP_TERRAINS_MAPS;@FOW-Workshop;@IFA_AIO_LITE;@IFA_LIBERATION;@IFA_TERRAINS;@WW2_OBJECTS
+
