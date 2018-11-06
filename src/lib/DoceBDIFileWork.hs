@@ -31,9 +31,22 @@ module DoceBDIFileWork (readJSON,
     let content = F.readFile fname
     content
 
+  processMod :: String -> [String]
+  processMod m!!0 == '%' = 
+
+
+  processServidorMods :: [String] -> [ServerMod]
+  processServidorMods m =
+    -- Para cada elemento retornado si empieza por % es un repo entero
+    -- y hay que leer su ModOrder
+    -- Si contiene : hay que leer ese ModOrder
+    x = wordsWhen (==';') m
+
+
   createServidor :: [String] -> Servidores
   createServidor (v:n:i:p:m:[]) =
-    Servidor v n i p m
+
+    Servidor (read v) n i (read p) $ processServidorMods m
 
   parseServidor :: String -> Servidores
   parseServidor s =

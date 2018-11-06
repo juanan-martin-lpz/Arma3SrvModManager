@@ -58,10 +58,11 @@ module DoceBDIData (
 
   -- NO Aeson
 
-  data Servidores  = Servidor {version :: Int, nombreServer :: String, ip :: String, port :: Int, modList :: [ServerMod]}
+  data Servidores   = Servidor {version :: Int, nombreServer :: String, ip :: String, port :: Int, modList :: [ServerMod]}
   newtype ServerMod = ServerMod { nMod :: String }
   newtype ModOrder  = ModOrder { nombreMod :: String }
-
+  type ModItem      = String
+  
   -- Show Instancias
 
   instance Show Mod where
