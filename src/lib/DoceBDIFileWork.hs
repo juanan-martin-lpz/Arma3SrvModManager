@@ -32,8 +32,8 @@ module DoceBDIFileWork (readJSON,
     content
 
   processMod :: String -> [String]
-  processMod m!!0 == '%' = 
-
+  processMod m | m!!0 == '%' =
+  processMod m | 
 
   processServidorMods :: [String] -> [ServerMod]
   processServidorMods m =
