@@ -31,16 +31,26 @@ module DoceBDIFileWork (readJSON,
     let content = F.readFile fname
     content
 
+  readModOrder :: String -> [ModOrder]
+  readModOrder mo = do
+    let content = F.readFile mo
+    let rows = lines content
+    ModOrder [ rows | r <- rows]
+    
   processMod :: String -> [String]
-  processMod m!!0 == '%' = 
+  processMod m | wordsWhen (==':') =
+
+  processMod m | m!!0 == '%' =
+    let mod = [ m | c <- m , c /= '%']
+    -- Cargar modorder.txt
 
 
-  processServidorMods :: [String] -> [ServerMod]
+  processServidorMods :: String -> [ServerMod]
   processServidorMods m =
     -- Para cada elemento retornado si empieza por % es un repo entero
     -- y hay que leer su ModOrder
     -- Si contiene : hay que leer ese ModOrder
-    x = wordsWhen (==';') m
+    ServerMod [x = wordsWhen (==';') m | processMod ]
 
 
   createServidor :: [String] -> Servidores
