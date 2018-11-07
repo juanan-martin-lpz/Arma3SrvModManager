@@ -1,7 +1,10 @@
 module DoceBDIFileWork (readJSON,
                         parseFicherosJson,
                         parseRepositoriesJson,
-                        readRepositorios) where
+                        readRepositorios,
+                        readRepomods,
+                        writeRepositorios,
+                        writeRepomods) where
 
   import DoceBDIData
   import System.IO as F
@@ -33,11 +36,35 @@ module DoceBDIFileWork (readJSON,
     let c = Prelude.lines l
     return c
 
+  writeIdx :: String -> [String] -> IO ()
+  writeIdx fname contents = do
+    let cs = Prelude.concat $ [x ++ "\n" | x <- contents]
+    F.writeFile fname cs
+
   readRepositorios :: String -> IO [Repositorios]
   readRepositorios fname = do
     c <- readIdx fname
     let r = [ Repositorios s | s <- c]
     return r
+
+  writeRepositorios :: String -> IO [Repositorios] -> IO ()
+  writeRepositorios fname repos = do
+    r <- repos
+    let cs = [repon x | x <- r]
+    writeIdx fname cs
+
+  readRepomods :: String -> IO [RepoMod]
+  readRepomods fname = do
+    c <- readIdx fname
+    let r = [ RepoMod s | s <- c]
+    return r
+
+  writeRepomods :: String -> IO [RepoMod] -> IO ()
+  writeRepomods fname repos = do
+    r <- repos
+    let cs = [repomodn x | x <- r]
+    writeIdx fname cs
+
   {-
   readServidores2Txt :: String -> IO String
   readServidores2Txt fname = do
@@ -53,7 +80,7 @@ module DoceBDIFileWork (readJSON,
   processMod :: String -> [String]
 <<<<<<< HEAD
   processMod m | m!!0 == '%' =
-  processMod m | 
+  processMod m |
 =======
   processMod m | wordsWhen (==':') =
 

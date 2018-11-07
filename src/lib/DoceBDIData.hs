@@ -77,6 +77,9 @@ module DoceBDIData (
   instance Show Repositorios where
     show (Repositorios r) = show r
 
+  instance Show RepoMod where
+    show (RepoMod r) = show r
+
   instance Show Mod where
     show (Mod m _) = show m
 
