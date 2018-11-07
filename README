@@ -1,14 +1,14 @@
 ESTRUCTURAS DE DATOS
 
-  ficheros.json             -> Completo
-  repositories.json         -> Completo
+  ficheros.json             -> Completo         -- Solo lectura
+  repositories.json         -> Completo         -- Solo lectura
   contents.json             -> Sin iniciar
   settings.json             -> Completo         -- Faltaria ver que opciones mas hay que poner
-  Servidores2.txt           -> En proceso       -- Falta por procesar los Mods
+  Servidores2.txt           -> Detenido         -- Falta por procesar los Mods
   modorder.txt              -> Sin iniciar
-  *repositories.idx         -> Sin iniciar      -- Nuevos
-  *repomods.idx             -> Sin iniciar
-  *launcher.json            -> Sin iniciar
+  *repositories.idx         -> Completo         -- Nuevos
+  *repomods.idx             -> Completo
+  *launcher.json            -> Completo
 
 TAREAS
   Nueva estructura de repo  -> En proceso

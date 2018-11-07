@@ -21,13 +21,28 @@ module DoceBDIData (
 
   import qualified Data.ByteString as BS
 
-  data Settings = DeltaSettings {  sourcePath :: String
-                                  , destinyPath :: String
-                                  , diffPath :: String }
+  data Settings = DeltaSettings               {   sourcePath :: String
+                                                , destinyPath :: String
+                                                , diffPath :: String }
+
+  data GeneratorSettings = GeneratorSettings  {   gsSourcePath :: String
+                                                , gsDestinyPath :: String
+                                                , gsMoveFiles :: Bool             -- Mueve a destino en lugar de copiar
+                                                , gsDefaultModOrder :: Bool       -- Genera un modorder por defecto, sin orden especifico
+                                                , gsGenerateOldData :: Bool }      -- Genera ademas de los ficheros de la nueva estructura los de la antigua
+
+
+  -- Show instances
 
   instance Show Settings where
     show (DeltaSettings s d dp) = show s ++ "---" ++ show d ++ "---" ++ show dp
 
+  instance Show GeneratorSettings where
+    show (GeneratorSettings s d m dm g) = show s ++ "---" ++ show d ++ "---" ++ show m ++ "---" ++ show dm ++ "---" ++ show g
+
+  -- AESON
+
+  -- Settings
   instance ToJSON Settings where
     toJSON DeltaSettings {..}     = object [ "sourcePath" .= sourcePath, "destinyPath" .= destinyPath, "diffPath" .= diffPath ]
     toEncoding DeltaSettings {..} = pairs $ "sourcePath" .= sourcePath <> "destinyPath" .= destinyPath <> "diffPath" .= diffPath
@@ -35,6 +50,17 @@ module DoceBDIData (
   instance FromJSON Settings where
     parseJSON (Object s) = DeltaSettings <$> s .: "sourcePath" <*> s .: "destinyPath" <*>  s .: "diffPath"
     parseJSON _          = empty
+
+  -- GeneratorSettings
+
+  instance ToJSON GeneratorSettings where
+    toJSON GeneratorSettings {..}     = object [ "gsSourcePath" .= gsSourcePath, "gsDestinyPath" .= gsDestinyPath, "gsMoveFiles" .= gsMoveFiles, "gsDefaultModOrder" .= gsDefaultModOrder, "gsGenerateOldData" .= gsGenerateOldData ]
+    toEncoding GeneratorSettings {..} = pairs $ "gsSourcePath" .= gsSourcePath <> "gsDestinyPath" .= gsDestinyPath <> "gsMoveFiles" .= gsMoveFiles <> "gsDefaultModOrder" .= gsDefaultModOrder <> "gsGenerateOldData" .= gsGenerateOldData
+
+  instance FromJSON GeneratorSettings where
+    parseJSON (Object s) = GeneratorSettings <$> s .: "gsSourcePath" <*> s .: "gsDestinyPath" <*>  s .: "gsMoveFiles" <*> s .: "gsDefaultModOrder" <*> s .: "gsGenerateOldData"
+    parseJSON _          = empty
+
 
   -- Alias
   type FileRelativePath = String
