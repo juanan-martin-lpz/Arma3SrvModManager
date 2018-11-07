@@ -7,7 +7,9 @@ module DoceBDIData (
   Entry (..),
   Ficheros(..),
   Repositories(..),
-  Servidores(..)
+  Servidores(..),
+  Repositorios(..),
+  RepoMod(..)
                     ) where
 
   import Data.Aeson
@@ -57,13 +59,23 @@ module DoceBDIData (
   data Ficheros     = Ficheros { modFolder :: String, ruta :: String, rfilename :: String, firma :: String, tamano :: Integer}
 
   -- NO Aeson
-
+  -- Lanzador
   data Servidores   = Servidor {version :: Int, nombreServer :: String, ip :: String, port :: Int, modList :: [ServerMod]}
-  newtype ServerMod = ServerMod { nMod :: String }
-  newtype ModOrder  = ModOrder { nombreMod :: String }
+  data ServerMod    = ServerMod { nMod :: String }
+  data ModOrder     = ModOrder { nombreMod :: String }
   type ModItem      = String
-  
+
+  -- Nueva Version
+
+  data Repositorios = Repositorios { repon :: String }
+  data RepoMod      = RepoMod { repomodn :: String }
+  -- ficheros mantiene la misma estructura
+
+
   -- Show Instancias
+
+  instance Show Repositorios where
+    show (Repositorios r) = show r
 
   instance Show Mod where
     show (Mod m _) = show m

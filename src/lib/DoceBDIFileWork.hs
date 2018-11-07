@@ -1,7 +1,7 @@
 module DoceBDIFileWork (readJSON,
                         parseFicherosJson,
                         parseRepositoriesJson,
-                        readServidores2Txt) where
+                        readRepositorios) where
 
   import DoceBDIData
   import System.IO as F
@@ -26,21 +26,53 @@ module DoceBDIFileWork (readJSON,
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
+  readIdx :: String -> IO [String]
+  readIdx fname = do
+    let content = F.readFile fname
+    l <- content
+    let c = Prelude.lines l
+    return c
+
+  readRepositorios :: String -> IO [Repositorios]
+  readRepositorios fname = do
+    c <- readIdx fname
+    let r = [ Repositorios s | s <- c]
+    return r
+  {-
   readServidores2Txt :: String -> IO String
   readServidores2Txt fname = do
     let content = F.readFile fname
     content
 
+  readModOrder :: String -> [ModOrder]
+  readModOrder mo = do
+    let content = F.readFile mo
+    let rows = lines content
+    ModOrder [ rows | r <- rows]
+
   processMod :: String -> [String]
+<<<<<<< HEAD
   processMod m | m!!0 == '%' =
   processMod m | 
+=======
+  processMod m | wordsWhen (==':') =
 
-  processServidorMods :: [String] -> [ServerMod]
+  processMod m | m!!0 == '%' =
+    let mod = [ ModOrder m | c <- m , c /= '%']
+    -- Cargar modorder.txt
+
+>>>>>>> 31ce96a41c5143dd18d45ade053f200d2a16de3a
+
+  processServidorMods :: String -> [ServerMod]
   processServidorMods m =
     -- Para cada elemento retornado si empieza por % es un repo entero
     -- y hay que leer su ModOrder
     -- Si contiene : hay que leer ese ModOrder
-    x = wordsWhen (==';') m
+    let mods = wordsWhen (==';') m
+
+    let pmods = [processMod x | x <- mods]
+
+    ServerMod [x = wordsWhen (==';') m | processMod ]
 
 
   createServidor :: [String] -> Servidores
@@ -51,7 +83,7 @@ module DoceBDIFileWork (readJSON,
   parseServidor :: String -> Servidores
   parseServidor s =
     createServidor $ wordsWhen (=='|') s
-
+  -}
 
   -- From StackOverflow (https://stackoverflow.com/questions/4978578/how-to-split-a-string-in-haskell)
 

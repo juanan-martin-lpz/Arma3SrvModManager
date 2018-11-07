@@ -6,9 +6,12 @@ ESTRUCTURAS DE DATOS
   settings.json             -> Completo         -- Faltaria ver que opciones mas hay que poner
   Servidores2.txt           -> En proceso       -- Falta por procesar los Mods
   modorder.txt              -> Sin iniciar
+  *repositories.idx         -> Sin iniciar      -- Nuevos
+  *repomods.idx             -> Sin iniciar
+  *launcher.json            -> Sin iniciar
 
 TAREAS
-
+  Nueva estructura de repo  -> Sin iniciar
   Generacion de Hashes xx   -> Sin iniciar
   Comprobacion de Hashes xx -> Sin iniciar
   Generacion de Diff/Patch  -> Sin iniciar
