@@ -9,7 +9,8 @@ module DoceBDIData (
   Repositories(..),
   Servidores(..),
   Repositorios(..),
-  RepoMod(..)
+  RepoMod(..),
+  GeneratorSettings(..)
                     ) where
 
   import Data.Aeson

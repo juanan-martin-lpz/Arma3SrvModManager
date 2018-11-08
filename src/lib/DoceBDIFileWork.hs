@@ -4,7 +4,9 @@ module DoceBDIFileWork (readJSON,
                         readRepositorios,
                         readRepomods,
                         writeRepositorios,
-                        writeRepomods) where
+                        writeRepomods,
+                        parseDeltaJson,
+                        parseGeneratorJson) where
 
   import DoceBDIData
   import System.IO as F
@@ -28,6 +30,17 @@ module DoceBDIFileWork (readJSON,
   parseRepositoriesJson content = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
+
+  parseGeneratorJson:: ByteString -> IO (Maybe GeneratorSettings)
+  parseGeneratorJson content = do
+    let setm = decode content    -- setm = Maybe Ficheros || Nothing
+    return setm      -- return IO (Maybe Ficheros)
+
+  parseDeltaJson:: ByteString -> IO (Maybe Settings)
+  parseDeltaJson content = do
+    let setm = decode content    -- setm = Maybe Ficheros || Nothing
+    return setm      -- return IO (Maybe Ficheros)
+
 
   readIdx :: String -> IO [String]
   readIdx fname = do
