@@ -38,4 +38,6 @@ module Main where
   main = do
     options <- cmdArgs (modes [complete, gui, deltas, hashes] &= help "Generador de repositorios de Arma 3" &= program "12bdi-launcher" &= summary "12BDI Launcher v1.0\nCross Platform")
 
+    print options
+
     return ()

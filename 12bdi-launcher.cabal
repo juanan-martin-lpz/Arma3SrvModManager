@@ -34,7 +34,7 @@ library
 
 executable 12bdi-launcher
   main-is:             Main.hs
-  other-modules:       CommandOptions
+  -- other-modules:       
   -- other-extensions:
   build-depends:       base >=4.11 && <4.12,
                        text,
