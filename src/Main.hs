@@ -49,8 +49,14 @@ module Main where
   director (Complete) = undefined
   director (Hashes _ _ _ _ _) = undefined
   director (Deltas _ _ _) = undefined
+
+  director (SteamWorkshop Nothing Nothing Nothing) = do
+    cfg <- readLocalConfig
+    doJob cfg
+    return ()
   director (SteamWorkshop s c m) = do
-    
+    -- cfg 
+    doJob cfg
     return ()
 
 
