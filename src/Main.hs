@@ -11,6 +11,7 @@ module Main where
 
   data Launcher =   Deltas { new :: Maybe FilePath, old :: Maybe FilePath, diff :: Maybe FilePath }
                     | Hashes { src :: Maybe FilePath, dst :: Maybe FilePath, move :: Maybe Bool, defaultorder :: Maybe Bool, olddata :: Maybe Bool}
+                    | SteamWorkshop { steamcmdpath :: Maybe FilePath, contentsjson :: Maybe FilePath, modspath :: Maybe FilePath }
                     | Complete
                     | GUI
                     deriving (Data,Typeable,Show,Eq)
@@ -34,10 +35,27 @@ module Main where
        ,olddata = def &= help "Generar datos adicionales para el Lanzador antiguo"
       } &= help "Calcula las firmas y genera los ficheros necesarios para ello"
 
+  steamwork = SteamWorkshop
+      { steamcmdpath = def &= help "Path de SteamCmd" &= typDir
+       ,contentsjson = def &= help "Path del fichero de descargas" &= typDir
+       ,modspath = def &= help "Path para copia final de los mods" &= typDir
+      } &= help "Descarga de Steam Workshop los addons especificados"
+
+
+  -- Rutina principal
+
+  director :: Launcher -> IO ()
+  director (GUI) = undefined
+  director (Complete) = undefined
+  director (Hashes _ _ _ _ _) = undefined
+  director (Deltas _ _ _) = undefined
+  director (SteamWorkshop s c m) = do
+    
+    return ()
+
+
   main :: IO ()
   main = do
-    options <- cmdArgs (modes [complete, gui, deltas, hashes] &= help "Generador de repositorios de Arma 3" &= program "12bdi-launcher" &= summary "12BDI Launcher v1.0\nCross Platform")
+    options <- cmdArgs (modes [complete, gui, deltas, hashes, steamwork] &= help "Generador de repositorios de Arma 3" &= program "12bdi-launcher" &= summary "12BDI Launcher v1.0\nCross Platform Multitool")
 
-    print options
-
-    return ()
+    director options
