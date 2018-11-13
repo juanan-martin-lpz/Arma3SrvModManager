@@ -8,10 +8,14 @@ module Main where
   import Data.Text
   import System.Console.GetOpt
   import Data.Maybe ( fromMaybe )
+  import Control.Monad.Reader
+  import DoceBDIFileWork
+  import DoceBDIData
+  import Data.Maybe
 
   data Launcher =   Deltas { new :: Maybe FilePath, old :: Maybe FilePath, diff :: Maybe FilePath }
                     | Hashes { src :: Maybe FilePath, dst :: Maybe FilePath, move :: Maybe Bool, defaultorder :: Maybe Bool, olddata :: Maybe Bool}
-                    | SteamWorkshop { steamcmdpath :: Maybe FilePath, contentsjson :: Maybe FilePath, modspath :: Maybe FilePath }
+                    | SteamCmd { scmdpath :: Maybe FilePath, contjson :: Maybe FilePath, mpath :: Maybe FilePath }
                     | Complete
                     | GUI
                     deriving (Data,Typeable,Show,Eq)
@@ -35,30 +39,42 @@ module Main where
        ,olddata = def &= help "Generar datos adicionales para el Lanzador antiguo"
       } &= help "Calcula las firmas y genera los ficheros necesarios para ello"
 
-  steamwork = SteamWorkshop
-      { steamcmdpath = def &= help "Path de SteamCmd" &= typDir
-       ,contentsjson = def &= help "Path del fichero de descargas" &= typDir
-       ,modspath = def &= help "Path para copia final de los mods" &= typDir
+  steamwork = SteamCmd
+      { scmdpath = def &= help "Path de SteamCmd" &= typDir
+       ,contjson = def &= help "Path del fichero de descargas" &= typDir
+       ,mpath = def &= help "Path para copia final de los mods" &= typDir
       } &= help "Descarga de Steam Workshop los addons especificados"
 
 
+
+  readSteamWorkshopLocalConfig :: String -> IO Launcher
+  readSteamWorkshopLocalConfig cfg = do
+    env <- (readJSON cfg >>= parseSteamCmdJson)
+
+    return $ let  s = steamcmdpath $ fromJust env
+                  c = contentsjson $ fromJust env
+                  m = modspath $ fromJust env in
+                  SteamCmd { scmdpath = Just s, contjson = Just c, mpath = Just m } where
+
+
+    --return r
   -- Rutina principal
 
   director :: Launcher -> IO ()
+
   director (GUI) = undefined
   director (Complete) = undefined
   director (Hashes _ _ _ _ _) = undefined
   director (Deltas _ _ _) = undefined
 
-  director (SteamWorkshop Nothing Nothing Nothing) = do
-    cfg <- readLocalConfig
-    doJob cfg
+  director (SteamCmd Nothing Nothing Nothing) = do
+    cfg <- readSteamWorkshopLocalConfig "./steamws.json"
+    print cfg
     return ()
-  director (SteamWorkshop s c m) = do
-    -- cfg 
-    doJob cfg
+  director (SteamCmd s c m) = do
+    -- cfg
+    --doJob cfg
     return ()
-
 
   main :: IO ()
   main = do

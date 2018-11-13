@@ -10,7 +10,8 @@ module DoceBDIData (
   Servidores(..),
   Repositorios(..),
   RepoMod(..),
-  GeneratorSettings(..)
+  GeneratorSettings(..),
+  SteamWorkshop(..)
                     ) where
 
   import Data.Aeson
@@ -32,6 +33,9 @@ module DoceBDIData (
                                                 , gsDefaultModOrder :: Bool       -- Genera un modorder por defecto, sin orden especifico
                                                 , gsGenerateOldData :: Bool }      -- Genera ademas de los ficheros de la nueva estructura los de la antigua
 
+  data SteamWorkshop = SteamWorkshop          { steamcmdpath :: FilePath
+                                               , contentsjson :: FilePath
+                                               , modspath :: FilePath }
 
   -- Show instances
 
@@ -40,6 +44,9 @@ module DoceBDIData (
 
   instance Show GeneratorSettings where
     show (GeneratorSettings s d m dm g) = show s ++ "---" ++ show d ++ "---" ++ show m ++ "---" ++ show dm ++ "---" ++ show g
+
+  instance Show SteamWorkshop where
+    show (SteamWorkshop s c m) = show s ++ "---" ++ show c ++ "---" ++ show m
 
   -- AESON
 
@@ -62,6 +69,14 @@ module DoceBDIData (
     parseJSON (Object s) = GeneratorSettings <$> s .: "gsSourcePath" <*> s .: "gsDestinyPath" <*>  s .: "gsMoveFiles" <*> s .: "gsDefaultModOrder" <*> s .: "gsGenerateOldData"
     parseJSON _          = empty
 
+  -- SteamWorkshop
+  instance ToJSON SteamWorkshop where
+    toJSON SteamWorkshop {..}     = object [ "steamCmdPath" .= steamcmdpath, "contentsJson" .= contentsjson, "modsPath" .= modspath ]
+    toEncoding SteamWorkshop {..} = pairs $ "steamCmdPath" .= steamcmdpath <> "contentsJson" .= contentsjson <> "modsPath" .= modspath
+
+  instance FromJSON SteamWorkshop where
+    parseJSON (Object s) = SteamWorkshop <$> s .: "steamCmdPath" <*> s .: "contentsJson" <*>  s .: "modsPath"
+    parseJSON _          = empty
 
   -- Alias
   type FileRelativePath = String
