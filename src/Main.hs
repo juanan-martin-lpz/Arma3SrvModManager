@@ -12,14 +12,8 @@ module Main where
   import DoceBDIFileWork
   import DoceBDIData
   import Data.Maybe
-
-  data Launcher =   Deltas { new :: Maybe FilePath, old :: Maybe FilePath, diff :: Maybe FilePath }
-                    | Hashes { src :: Maybe FilePath, dst :: Maybe FilePath, move :: Maybe Bool, defaultorder :: Maybe Bool, olddata :: Maybe Bool}
-                    | SteamCmd { scmdpath :: Maybe FilePath, contjson :: Maybe FilePath, mpath :: Maybe FilePath }
-                    | Complete
-                    | GUI
-                    deriving (Data,Typeable,Show,Eq)
-
+  import LauncherData
+  import SteamCmd
 
   complete = Complete &= help "Ejecuta todas las tareas"
 
@@ -47,17 +41,16 @@ module Main where
 
 
 
+{-
   readSteamWorkshopLocalConfig :: String -> IO Launcher
   readSteamWorkshopLocalConfig cfg = do
     env <- (readJSON cfg >>= parseSteamCmdJson)
-
     return $ let  s = steamcmdpath $ fromJust env
                   c = contentsjson $ fromJust env
                   m = modspath $ fromJust env in
                   SteamCmd { scmdpath = Just s, contjson = Just c, mpath = Just m } where
+-}
 
-
-    --return r
   -- Rutina principal
 
   director :: Launcher -> IO ()
@@ -69,7 +62,8 @@ module Main where
 
   director (SteamCmd Nothing Nothing Nothing) = do
     cfg <- readSteamWorkshopLocalConfig "./steamws.json"
-    print cfg
+    script <- makeDownloadScript cfg
+    print script
     return ()
   director (SteamCmd s c m) = do
     -- cfg

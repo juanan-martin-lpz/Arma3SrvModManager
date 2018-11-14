@@ -1,5 +1,5 @@
 {
   "steamCmdPath": "C:/SteamCmd",
-  "contentsJson": ".",
+  "contentsJson": "./contents.json",
   "modsPath": "C:/Mods"
 }

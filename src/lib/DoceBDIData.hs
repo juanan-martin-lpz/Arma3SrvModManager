@@ -11,7 +11,8 @@ module DoceBDIData (
   Repositorios(..),
   RepoMod(..),
   GeneratorSettings(..),
-  SteamWorkshop(..)
+  SteamWorkshop(..),
+  ContentsJson(..)
                     ) where
 
   import Data.Aeson
@@ -37,6 +38,10 @@ module DoceBDIData (
                                                , contentsjson :: FilePath
                                                , modspath :: FilePath }
 
+  data ContentsJson = ContentsJson            { modId :: String
+                                               , repositorio :: String
+                                               , carpeta :: String }
+
   -- Show instances
 
   instance Show Settings where
@@ -47,6 +52,9 @@ module DoceBDIData (
 
   instance Show SteamWorkshop where
     show (SteamWorkshop s c m) = show s ++ "---" ++ show c ++ "---" ++ show m
+
+  instance Show ContentsJson where
+    show (ContentsJson s c m) = show s ++ "---" ++ show c ++ "---" ++ show m
 
   -- AESON
 
@@ -76,6 +84,15 @@ module DoceBDIData (
 
   instance FromJSON SteamWorkshop where
     parseJSON (Object s) = SteamWorkshop <$> s .: "steamCmdPath" <*> s .: "contentsJson" <*>  s .: "modsPath"
+    parseJSON _          = empty
+
+  -- SteamWorkshop
+  instance ToJSON ContentsJson where
+    toJSON ContentsJson {..}     = object [ "modId" .= modId, "Repositorio" .= repositorio, "Carpeta" .= carpeta ]
+    toEncoding ContentsJson {..} = pairs $ "modId" .= modId <> "Repositorio" .= repositorio <> "Carpeta" .= carpeta
+
+  instance FromJSON ContentsJson where
+    parseJSON (Object s) = ContentsJson <$> s .: "modId" <*> s .: "Repositorio" <*>  s .: "Carpeta"
     parseJSON _          = empty
 
   -- Alias

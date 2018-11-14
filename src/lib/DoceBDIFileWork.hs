@@ -7,7 +7,8 @@ module DoceBDIFileWork (readJSON,
                         writeRepomods,
                         parseDeltaJson,
                         parseGeneratorJson,
-                        parseSteamCmdJson) where
+                        parseSteamCmdJson,
+                        parseContentsJson) where
 
   import DoceBDIData
   import System.IO as F
@@ -44,6 +45,11 @@ module DoceBDIFileWork (readJSON,
 
   parseSteamCmdJson:: ByteString -> IO (Maybe SteamWorkshop)
   parseSteamCmdJson content = do
+    let setm = decode content    -- setm = Maybe Ficheros || Nothing
+    return setm      -- return IO (Maybe Ficheros)
+
+  parseContentsJson:: ByteString -> IO (Maybe [ContentsJson])
+  parseContentsJson content = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
