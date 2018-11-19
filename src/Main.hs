@@ -60,12 +60,12 @@ module Main where
   director (Hashes _ _ _ _ _) = undefined
   director (Deltas _ _ _) = undefined
 
-  director (SteamCmd Nothing Nothing Nothing) = do
+  director (SteamCmd Nothing Nothing Nothing Nothing Nothing) = do
     cfg <- readSteamWorkshopLocalConfig "./steamws.json"
-    script <- makeDownloadScript cfg
+    script <- createScript cfg
     print script
     return ()
-  director (SteamCmd s c m) = do
+  director (SteamCmd s c m u p) = do
     -- cfg
     --doJob cfg
     return ()

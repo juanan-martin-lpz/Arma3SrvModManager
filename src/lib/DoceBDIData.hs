@@ -36,7 +36,9 @@ module DoceBDIData (
 
   data SteamWorkshop = SteamWorkshop          { steamcmdpath :: FilePath
                                                , contentsjson :: FilePath
-                                               , modspath :: FilePath }
+                                               , modspath :: FilePath
+                                               , user :: String
+                                               , pwd :: String}
 
   data ContentsJson = ContentsJson            { modId :: String
                                                , repositorio :: String
@@ -51,7 +53,7 @@ module DoceBDIData (
     show (GeneratorSettings s d m dm g) = show s ++ "---" ++ show d ++ "---" ++ show m ++ "---" ++ show dm ++ "---" ++ show g
 
   instance Show SteamWorkshop where
-    show (SteamWorkshop s c m) = show s ++ "---" ++ show c ++ "---" ++ show m
+    show (SteamWorkshop s c m u p) = show s ++ "---" ++ show c ++ "---" ++ show m
 
   instance Show ContentsJson where
     show (ContentsJson s c m) = show s ++ "---" ++ show c ++ "---" ++ show m
@@ -79,11 +81,11 @@ module DoceBDIData (
 
   -- SteamWorkshop
   instance ToJSON SteamWorkshop where
-    toJSON SteamWorkshop {..}     = object [ "steamCmdPath" .= steamcmdpath, "contentsJson" .= contentsjson, "modsPath" .= modspath ]
-    toEncoding SteamWorkshop {..} = pairs $ "steamCmdPath" .= steamcmdpath <> "contentsJson" .= contentsjson <> "modsPath" .= modspath
+    toJSON SteamWorkshop {..}     = object [ "steamCmdPath" .= steamcmdpath, "contentsJson" .= contentsjson, "modsPath" .= modspath, "user" .= user, "pwd" .= pwd ]
+    toEncoding SteamWorkshop {..} = pairs $ "steamCmdPath" .= steamcmdpath <> "contentsJson" .= contentsjson <> "modsPath" .= modspath <> "user" .= user <> "pwd" .= pwd
 
   instance FromJSON SteamWorkshop where
-    parseJSON (Object s) = SteamWorkshop <$> s .: "steamCmdPath" <*> s .: "contentsJson" <*>  s .: "modsPath"
+    parseJSON (Object s) = SteamWorkshop <$> s .: "steamCmdPath" <*> s .: "contentsJson" <*>  s .: "modsPath" <*>  s .: "user" <*>  s .: "pwd"
     parseJSON _          = empty
 
   -- SteamWorkshop

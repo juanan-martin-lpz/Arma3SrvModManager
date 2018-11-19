@@ -2,7 +2,7 @@ ESTRUCTURAS DE DATOS
 
   ficheros.json             -> Completo         -- Solo lectura
   repositories.json         -> Completo         -- Solo lectura
-  contents.json             -> Sin iniciar
+  contents.json             -> Completo         -- Solo lectura
   settings.json             -> Completo         -- Faltaria ver que opciones mas hay que poner
   Servidores2.txt           -> Detenido         -- Falta por procesar los Mods
   modorder.txt              -> Sin iniciar
@@ -21,7 +21,7 @@ TAREAS
   Borrado de Carpetas       -> Sin iniciar
   Creacion de Carpetas      -> Sin iniciar
   Descarga de Archivos      -> Sin iniciar
-  Ejecucion de Programas    -> Basico
+  Ejecucion de Programas    -> En proceso       -- Basico
   Detencion de Programas    -> Sin iniciar
   Control de Programas      -> Sin iniciar
   Control de Concurrencia   -> Sin iniciar

@@ -1,0 +1,8 @@
+@NoPromptForPassword 1
+login 12bdi ak74-pso
+force_install_dir C:/Mods workshop_download_item 107410 370592133
+ workshop_download_item 107410 943001311
+ workshop_download_item 107410 1228054959
+ workshop_download_item 107410 950966660
+logout
+quit
