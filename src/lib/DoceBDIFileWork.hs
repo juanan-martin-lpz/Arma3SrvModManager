@@ -8,12 +8,13 @@ module DoceBDIFileWork (readJSON,
                         parseDeltaJson,
                         parseGeneratorJson,
                         parseSteamCmdJson,
-                        parseContentsJson) where
+                        parseContentsJson,
+                        writeToTmp) where
 
   import DoceBDIData
   import System.IO as F
   import Control.Exception
-
+  import System.Directory
   import Data.Aeson
   import Data.Maybe
   import Data.ByteString.Lazy.Char8 as BS
@@ -89,6 +90,15 @@ module DoceBDIFileWork (readJSON,
     r <- repos
     let cs = [repomodn x | x <- r]
     writeIdx fname cs
+
+  writeToTmp :: String -> IO FilePath
+  writeToTmp content = do
+    dir <- getTemporaryDirectory
+    file <- F.openTempFile dir "script.txt"
+    let l = Prelude.length content
+    F.hPutStr (snd file) content
+    F.hClose $ snd file
+    return $ fst file
 
   {-
   readServidores2Txt :: String -> IO String

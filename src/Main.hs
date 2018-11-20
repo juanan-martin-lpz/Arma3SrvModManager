@@ -7,13 +7,13 @@ module Main where
   import DoceBDIExternalPrograms
   import Data.Text
   import System.Console.GetOpt
-  import Data.Maybe ( fromMaybe )
   import Control.Monad.Reader
   import DoceBDIFileWork
   import DoceBDIData
   import Data.Maybe
   import LauncherData
   import SteamCmd
+  import System.IO
 
   complete = Complete &= help "Ejecuta todas las tareas"
 
@@ -37,6 +37,8 @@ module Main where
       { scmdpath = def &= help "Path de SteamCmd" &= typDir
        ,contjson = def &= help "Path del fichero de descargas" &= typDir
        ,mpath = def &= help "Path para copia final de los mods" &= typDir
+       ,usr = def &= help "Usuario de Steam" &= typDir
+       ,pass = def &= help "Pass de Steam" &= typDir
       } &= help "Descarga de Steam Workshop los addons especificados"
 
 
@@ -63,7 +65,9 @@ module Main where
   director (SteamCmd Nothing Nothing Nothing Nothing Nothing) = do
     cfg <- readSteamWorkshopLocalConfig "./steamws.json"
     script <- createScript cfg
-    print script
+    fsc <- writeToTmp script
+    let steam = steamcmdpath cfg <> "/steamcmd.exe " <> "+runscript " <> fsc
+    execProgram $ pack steam
     return ()
   director (SteamCmd s c m u p) = do
     -- cfg
@@ -72,6 +76,9 @@ module Main where
 
   main :: IO ()
   main = do
+    hSetBuffering stdin LineBuffering
+    hSetBuffering stdout LineBuffering
+
     options <- cmdArgs (modes [complete, gui, deltas, hashes, steamwork] &= help "Generador de repositorios de Arma 3" &= program "12bdi-launcher" &= summary "12BDI Launcher v1.0\nCross Platform Multitool")
 
     director options

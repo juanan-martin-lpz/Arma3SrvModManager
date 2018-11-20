@@ -1,11 +1,12 @@
 module DoceBDIExternalPrograms ( execProgram ) where
 
-  import System.Process as P
+  import System.Process
+  import System.Exit
   import System.IO
   import Data.Text
 
-  execProgram :: Text -> IO Int
+  execProgram :: Text -> IO ExitCode
   execProgram program =
     do
-      createProcess (P.shell (unpack program)) --{ std_out = CreatePipe }
-      return 0
+      (_, _, _, pHandle) <- createProcess (shell (unpack program)) --{ std_out = CreatePipe }
+      waitForProcess pHandle

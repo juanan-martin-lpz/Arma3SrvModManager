@@ -11,7 +11,7 @@ module SteamCmd ( readSteamWorkshopLocalConfig,
   import Data.Text
 
 
-  readSteamWorkshopLocalConfig :: String -> IO Launcher
+  readSteamWorkshopLocalConfig :: String -> IO SteamWorkshop
   readSteamWorkshopLocalConfig cfg = do
     env <- (readJSON cfg >>= parseSteamCmdJson)
     return $ let  s = steamcmdpath $ fromJust env
@@ -20,17 +20,17 @@ module SteamCmd ( readSteamWorkshopLocalConfig,
                   u = user $ fromJust env
                   p = pwd $ fromJust env
              in
-                  SteamCmd { scmdpath = Just s, contjson = Just c, mpath = Just m, usr = Just u, pass = Just p  }
+                SteamWorkshop { steamcmdpath = s, contentsjson = c, modspath = m, user = u, pwd = p }
 
   headerScript :: String -> String -> String -> IO String
-  headerScript usr pwd ipath = return $ "@NoPromptForPassword 1\n" <> "login " <> usr <> " " <> pwd <> "\n" <> "force_install_dir " <> ipath
+  headerScript usr pwd ipath = return $ "@NoPromptForPassword 1\n" <> "login " <> usr <> " " <> pwd <> "\n" <> "force_install_dir " <> ipath <> "\n"
 
-  createScript :: Launcher -> IO String
+  createScript :: SteamWorkshop -> IO String
   createScript l = do
 
-    header <- let u = fromJust $ usr l
-                  p = fromJust $ pass l
-                  ipath = fromJust $ mpath l
+    header <- let u = user l
+                  p = pwd l
+                  ipath = modspath l
               in
                 headerScript u p ipath
 
@@ -43,9 +43,9 @@ module SteamCmd ( readSteamWorkshopLocalConfig,
   footerScript = return $ "logout\n" <> "quit\n"
 
 
-  bodyScript :: Launcher -> IO String
+  bodyScript :: SteamWorkshop -> IO String
   bodyScript cfg = do
     let baseScript = readFile "./script.txt"
-    raw <- readJSON $ fromJust $ contjson cfg
+    raw <- readJSON $ contentsjson cfg
     content <- parseContentsJson raw
-    return $ Prelude.concat $ [ (" workshop_download_item 107410 " <> modId m <> "\n") | m <- (fromJust content) ]
+    return $ Prelude.concat $ [ ("workshop_download_item 107410 " <> modId m <> "\n") | m <- (fromJust content) ]

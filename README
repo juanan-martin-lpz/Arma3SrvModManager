@@ -20,7 +20,7 @@ TAREAS
   Borrado de Archivos       -> Sin iniciar
   Borrado de Carpetas       -> Sin iniciar
   Creacion de Carpetas      -> Sin iniciar
-  Descarga de Archivos      -> Sin iniciar
+  Descarga de Archivos      -> En proceso       -- Descarga a traves de SteamCmd
   Ejecucion de Programas    -> En proceso       -- Basico
   Detencion de Programas    -> Sin iniciar
   Control de Programas      -> Sin iniciar
