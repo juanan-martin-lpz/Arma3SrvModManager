@@ -10,10 +10,12 @@ module Main where
   import Control.Monad.Reader
   import DoceBDIFileWork
   import DoceBDIData
+  import DoceBDIFileOperations
   import Data.Maybe
   import LauncherData
   import SteamCmd
   import System.IO
+
 
   complete = Complete &= help "Ejecuta todas las tareas"
 
@@ -68,6 +70,7 @@ module Main where
     fsc <- writeToTmp script
     let steam = steamcmdpath cfg <> "/steamcmd.exe " <> "+runscript " <> fsc
     execProgram $ pack steam
+    removeIfExists fsc
     return ()
   director (SteamCmd s c m u p) = do
     -- cfg

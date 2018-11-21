@@ -19,7 +19,8 @@ library
   exposed-modules:    DoceBDIFileWork,
                       DoceBDIExternalPrograms,
                       DoceBDIData,
-                      DoceBDIConfig
+                      DoceBDIConfig,
+                      DoceBDIFileOperations
   -- other-modules:
   -- other-extensions:
   build-depends:       base >=4.10 && <4.12,
