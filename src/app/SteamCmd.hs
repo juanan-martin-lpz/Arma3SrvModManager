@@ -1,14 +1,17 @@
 
 module SteamCmd ( readSteamWorkshopLocalConfig,
-                  createScript ) where
+                  createScript,
+                  publishRepo ) where
 
   import LauncherData
   import DoceBDIExternalPrograms
+  import DoceBDIFileOperations
   import Control.Monad.Reader
   import DoceBDIFileWork
   import DoceBDIData
   import Data.Maybe
   import Data.Text
+  import System.FilePath
 
 
   readSteamWorkshopLocalConfig :: String -> IO SteamWorkshop
@@ -49,3 +52,34 @@ module SteamCmd ( readSteamWorkshopLocalConfig,
     raw <- readJSON $ contentsjson cfg
     content <- parseContentsJson raw
     return $ Prelude.concat $ [ ("workshop_download_item 107410 " <> modId m <> "\n") | m <- (fromJust content) ]
+
+  publishRepo :: SteamWorkshop -> IO ()
+  publishRepo config = do
+    let path = contentsjson config
+    mods <- (readJSON path >>= parseContentsJson)
+    let modpath = modspath config
+    let base = modpath </> "steamapps/workshop/content/107410/"
+
+    let handleMods b m (x:xs) = processMod m b x >> handleMods b m xs
+        handleMods _ _ [] = return ()
+      in
+        handleMods base modpath (fromJust mods)
+
+    removeOld modpath
+
+  processMod :: FilePath -> FilePath -> ContentsJson -> IO ()
+  processMod path base mx = do
+    let str = "Moviendo a carpeta " <> (path </> repositorio mx </> carpeta mx)
+    putStrLn str
+    createModDirectory $ path </> repositorio mx
+
+    let m = modId mx
+        r = repositorio mx </> carpeta mx
+      in
+          moveModDirectory (base </> m) (path </> r)
+
+
+  removeOld :: FilePath -> IO ()
+  removeOld modpath = do
+    let base = modpath </> "steamapps"
+    removeModDirectory base

@@ -30,7 +30,8 @@ library
                        base-compat,
                        text,
                        cmdargs,
-                       directory
+                       directory,
+                       filepath
   hs-source-dirs:      src/lib
   default-language:    Haskell2010
 
@@ -43,7 +44,8 @@ executable 12bdi-launcher
                        text,
                        cmdargs,
                        mtl,
-                       12bdi-launcher
+                       12bdi-launcher,
+                       filepath
   hs-source-dirs:      src,
                        src/app
   default-language:    Haskell2010

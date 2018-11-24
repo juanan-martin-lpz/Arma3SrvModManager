@@ -15,7 +15,7 @@ module Main where
   import LauncherData
   import SteamCmd
   import System.IO
-
+  import Control.Concurrent
 
   complete = Complete &= help "Ejecuta todas las tareas"
 
@@ -44,17 +44,6 @@ module Main where
       } &= help "Descarga de Steam Workshop los addons especificados"
 
 
-
-{-
-  readSteamWorkshopLocalConfig :: String -> IO Launcher
-  readSteamWorkshopLocalConfig cfg = do
-    env <- (readJSON cfg >>= parseSteamCmdJson)
-    return $ let  s = steamcmdpath $ fromJust env
-                  c = contentsjson $ fromJust env
-                  m = modspath $ fromJust env in
-                  SteamCmd { scmdpath = Just s, contjson = Just c, mpath = Just m } where
--}
-
   -- Rutina principal
 
   director :: Launcher -> IO ()
@@ -68,9 +57,12 @@ module Main where
     cfg <- readSteamWorkshopLocalConfig "./steamws.json"
     script <- createScript cfg
     fsc <- writeToTmp script
-    let steam = steamcmdpath cfg <> "/steamcmd.exe " <> "+runscript " <> fsc
+    let steam = steamcmdpath cfg <> "/steamcmd.exe " <> "+ api_logging 'verbose' +runscript " <> fsc
     execProgram $ pack steam
     removeIfExists fsc
+    threadDelay 1500000
+    publishRepo cfg
+
     return ()
   director (SteamCmd s c m u p) = do
     -- cfg

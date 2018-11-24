@@ -16,10 +16,10 @@ TAREAS
   Comprobacion de Hashes xx -> Sin iniciar
   Generacion de Diff/Patch  -> Sin iniciar
   Aplicacion de Patches     -> Sin iniciar
-  Copia de Archivos         -> Sin iniciar
-  Borrado de Archivos       -> Sin iniciar
-  Borrado de Carpetas       -> Sin iniciar
-  Creacion de Carpetas      -> Sin iniciar
+  Copia/Mov de Archivos     -> Completo
+  Borrado de Archivos       -> Completo
+  Borrado de Carpetas       -> Completo
+  Creacion de Carpetas      -> Completo
   Descarga de Archivos      -> En proceso       -- Descarga a traves de SteamCmd
   Ejecucion de Programas    -> En proceso       -- Basico
   Detencion de Programas    -> Sin iniciar
