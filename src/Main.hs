@@ -4,18 +4,20 @@ module Main where
 
   import System.Environment
   import System.Console.CmdArgs
-  import DoceBDIExternalPrograms
   import Data.Text
   import System.Console.GetOpt
   import Control.Monad.Reader
+  import Data.Maybe
+  import System.IO
+  import Control.Concurrent
+
+  import LauncherData
   import DoceBDIFileWork
   import DoceBDIData
   import DoceBDIFileOperations
-  import Data.Maybe
-  import LauncherData
+  import DoceBDIExternalPrograms
   import SteamCmd
-  import System.IO
-  import Control.Concurrent
+  
 
   complete = Complete &= help "Ejecuta todas las tareas"
 

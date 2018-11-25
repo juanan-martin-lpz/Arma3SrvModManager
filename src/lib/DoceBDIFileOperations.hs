@@ -20,16 +20,25 @@ module DoceBDIFileOperations (removeIfExists,
 
 
   createModDirectory :: FilePath -> IO ()
-  createModDirectory mx = createDirectoryIfMissing True mx
+  createModDirectory mx = createDirectoryIfMissing True mx `catch` handleExists
+    where handleExists e
+            | isAlreadyExistsError e = return ()
+            | otherwise = throwIO e
 
   removeModDirectory :: FilePath -> IO ()
   removeModDirectory mx = removeDirectoryRecursive mx
 
   moveModDirectory :: FilePath -> FilePath -> IO ()
-  moveModDirectory from to = renamePath from to
+  moveModDirectory from to = renamePath from to `catch` handleExists
+    where handleExists e
+            | isDoesNotExistError e = return ()
+            | otherwise = throwIO e
 
   moveModFile :: FilePath -> FilePath -> IO ()
-  moveModFile from to = renameFile from to
+  moveModFile from to = renameFile from to `catch` handleExists
+    where handleExists e
+            | isDoesNotExistError e = return ()
+            | otherwise = throwIO e
 
   copyModFile :: FilePath -> FilePath -> IO ()
   copyModFile from to = copyFile from to

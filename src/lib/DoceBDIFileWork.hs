@@ -11,7 +11,6 @@ module DoceBDIFileWork (readJSON,
                         parseContentsJson,
                         writeToTmp) where
 
-  import DoceBDIData
   import System.IO as F
   import Control.Exception
   import System.Directory
@@ -19,38 +18,51 @@ module DoceBDIFileWork (readJSON,
   import Data.Maybe
   import Data.ByteString.Lazy.Char8 as BS
   import Data.Text
+  import System.IO.Error hiding (catch)
+
+  import DoceBDIData
+  
 
   readJSON :: String -> IO ByteString
-  readJSON fname = do BS.readFile fname
+  readJSON fname = do BS.readFile fname `catch` handleExists
+    where handleExists e
+            | isDoesNotExistError e = return BS.empty
+            | otherwise = throwIO e
 
   parseFicherosJson:: ByteString -> IO (Maybe [Ficheros])
-  parseFicherosJson content = do
+  parseFicherosJson content | content == BS.empty = return (Just [])
+                            | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
 
   parseRepositoriesJson:: ByteString -> IO (Maybe [Repositories])
-  parseRepositoriesJson content = do
+  parseRepositoriesJson content | content == BS.empty = return (Just [])
+                                | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
   parseGeneratorJson:: ByteString -> IO (Maybe GeneratorSettings)
-  parseGeneratorJson content = do
+  parseGeneratorJson content | content == BS.empty = return Nothing
+                             | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
   parseDeltaJson:: ByteString -> IO (Maybe Settings)
-  parseDeltaJson content = do
+  parseDeltaJson content | content == BS.empty = return Nothing
+                         | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
   parseSteamCmdJson:: ByteString -> IO (Maybe SteamWorkshop)
-  parseSteamCmdJson content = do
+  parseSteamCmdJson content | content == BS.empty = return Nothing
+                            | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
   parseContentsJson:: ByteString -> IO (Maybe [ContentsJson])
-  parseContentsJson content = do
+  parseContentsJson content | content == BS.empty = return (Just [])
+                            | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 

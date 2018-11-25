@@ -3,16 +3,17 @@ module SteamCmd ( readSteamWorkshopLocalConfig,
                   createScript,
                   publishRepo ) where
 
-  import LauncherData
-  import DoceBDIExternalPrograms
-  import DoceBDIFileOperations
+
   import Control.Monad.Reader
-  import DoceBDIFileWork
-  import DoceBDIData
   import Data.Maybe
   import Data.Text
   import System.FilePath
 
+  import LauncherData
+  import DoceBDIExternalPrograms
+  import DoceBDIFileOperations
+  import DoceBDIFileWork
+  import DoceBDIData
 
   readSteamWorkshopLocalConfig :: String -> IO SteamWorkshop
   readSteamWorkshopLocalConfig cfg = do
