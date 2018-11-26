@@ -45,6 +45,7 @@ executable 12bdi-launcher
                        cmdargs,
                        mtl,
                        12bdi-launcher,
+                       directory,
                        filepath
   hs-source-dirs:      src,
                        src/app

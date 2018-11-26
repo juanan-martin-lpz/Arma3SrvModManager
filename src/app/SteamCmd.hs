@@ -8,6 +8,9 @@ module SteamCmd ( readSteamWorkshopLocalConfig,
   import Data.Maybe
   import Data.Text
   import System.FilePath
+  import System.Exit
+  import System.IO
+  import System.Directory
 
   import LauncherData
   import DoceBDIExternalPrograms
@@ -18,11 +21,17 @@ module SteamCmd ( readSteamWorkshopLocalConfig,
   readSteamWorkshopLocalConfig :: String -> IO SteamWorkshop
   readSteamWorkshopLocalConfig cfg = do
     env <- (readJSON cfg >>= parseSteamCmdJson)
-    return $ let  s = steamcmdpath $ fromJust env
-                  c = contentsjson $ fromJust env
-                  m = modspath $ fromJust env
-                  u = user $ fromJust env
-                  p = pwd $ fromJust env
+
+    if isNothing env
+      then  hPutStrLn stdout "Error:\nSe necesita el fichero steamws.json en la misma carpeta que el ejecutable" >> exitFailure
+    else
+      sequence_ []
+
+    return $ let s = steamcmdpath $ fromJust env
+                 c = contentsjson $ fromJust env
+                 m = modspath $ fromJust env
+                 u = user $ fromJust env
+                 p = pwd $ fromJust env
              in
                 SteamWorkshop { steamcmdpath = s, contentsjson = c, modspath = m, user = u, pwd = p }
 
@@ -59,6 +68,7 @@ module SteamCmd ( readSteamWorkshopLocalConfig,
     let path = contentsjson config
     mods <- (readJSON path >>= parseContentsJson)
     let modpath = modspath config
+
     let base = modpath </> "steamapps/workshop/content/107410/"
 
     let handleMods b m (x:xs) = processMod m b x >> handleMods b m xs
