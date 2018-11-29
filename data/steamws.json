@@ -2,6 +2,6 @@
   "steamCmdPath": "C:/SteamCmd",
   "contentsJson": "./contents.json",
   "modsPath": "C:/Mods",
-  "user": "12bdi",
-  "pwd": "ak74-pso"
+  "user": "usuario",
+  "pwd": "password"
 }

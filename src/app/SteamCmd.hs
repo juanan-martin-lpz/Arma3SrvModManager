@@ -61,16 +61,16 @@ module SteamCmd ( readSteamWorkshopLocalConfig,
     let baseScript = readFile "./script.txt"
     raw <- readJSON $ contentsjson cfg
     content <- parseContentsJson raw
-    return $ Prelude.concat $ [ ("workshop_download_item 107410 " <> modId m <> "\n") | m <- (fromJust content) ]
+    case content of
+      Nothing -> return "\n"      -- Si no hay mods retornamos un linea vacia
+      Just (c) -> return $ Prelude.concat $ [ ("workshop_download_item 107410 " <> modId m <> "\n") | m <- c ]
 
   publishRepo :: SteamWorkshop -> IO ()
   publishRepo config = do
     let path = contentsjson config
     mods <- (readJSON path >>= parseContentsJson)
     let modpath = modspath config
-
     let base = modpath </> "steamapps/workshop/content/107410/"
-
     let handleMods b m (x:xs) = processMod m b x >> handleMods b m xs
         handleMods _ _ [] = return ()
       in

@@ -22,16 +22,17 @@ library
                       DoceBDIConfig,
                       DoceBDIFileOperations
   -- other-modules:
-  -- other-extensions:
-  build-depends:       base >=4.10 && <4.12,
-                       aeson >= 1.3 && <1.5,
+  -- other-extensions:  >=4.11 && <4.13  >= 1.3 && <1.5
+  build-depends:       base,
+                       aeson,
                        process,
                        bytestring,
                        base-compat,
                        text,
                        cmdargs,
                        directory,
-                       filepath
+                       filepath,
+                       filediff
   hs-source-dirs:      src/lib
   default-language:    Haskell2010
 
@@ -40,7 +41,7 @@ executable 12bdi-launcher
   other-modules:       LauncherData,
                        SteamCmd
   -- other-extensions:
-  build-depends:       base >=4.11 && <4.12,
+  build-depends:       base,
                        text,
                        cmdargs,
                        mtl,
