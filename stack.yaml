@@ -40,7 +40,8 @@ packages:
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 # extra-deps: []
-extra-deps: ['transformers-either-0.1.1@sha256:ec3d6fefd90e243b51aecebfc0ebc5db6381c261d473ea2df7ed7b501a8fb961', 'base-encoding-0.1.0.0@sha256:c135e34d919d1873f79b0b93600b11a7adaa36c4436c78212e95e3db14d53e56']
+extra-deps: ['transformers-either-0.1.1@sha256:ec3d6fefd90e243b51aecebfc0ebc5db6381c261d473ea2df7ed7b501a8fb961',
+             'base-encoding-0.1.0.0@sha256:c135e34d919d1873f79b0b93600b11a7adaa36c4436c78212e95e3db14d53e56']
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
@@ -65,3 +66,4 @@ extra-deps: ['transformers-either-0.1.1@sha256:ec3d6fefd90e243b51aecebfc0ebc5db6
 #
 # Allow a newer minor version of GHC than the snapshot specifies
 # compiler-check: newer-minor
+# allow-newer: true

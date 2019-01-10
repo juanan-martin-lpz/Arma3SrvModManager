@@ -1,7 +1,7 @@
 ESTRUCTURAS DE DATOS
 
-  ficheros.json             -> Completo         -- Solo lectura
-  repositories.json         -> Completo         -- Solo lectura
+  ficheros.json             -> Completo
+  repositories.json         -> Completo
   contents.json             -> Completo         -- Solo lectura
   settings.json             -> Completo         -- Faltaria ver que opciones mas hay que poner
   Servidores2.txt           -> Detenido         -- Falta por procesar los Mods
@@ -12,7 +12,7 @@ ESTRUCTURAS DE DATOS
 
 TAREAS
   Nueva estructura de repo  -> En proceso
-  Generacion de Hashes xx   -> Sin iniciar
+  Generacion de Hashes xx   -> Completo
   Comprobacion de Hashes xx -> Sin iniciar
   Generacion de Diff/Patch  -> Sin iniciar
   Aplicacion de Patches     -> Sin iniciar
@@ -40,7 +40,7 @@ Al paquete filediff se le han anadido en el fichero Zora/Types.hs los imports ne
 de Semigroup para ListDiff, Diff, FileDiff y FileChange sin las funciones <> respectivas, ademas de los imports necesarios para compilar y al fichero Filediff.hs se le han
 anadido los imports necesarios para compilar.
 Esta usando transformers-either-0.1.1 como dependencia extra y se ha eliminado la dependencia de Zora incuyendo Zora.List dentro del proyecto.
- 
+
 
 NOTAS
 

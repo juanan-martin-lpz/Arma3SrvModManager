@@ -14,7 +14,7 @@ module Main where
   import System.Directory
   import System.Exit
   import System.Info
-  import System.Posix.Files as P
+  import qualified System.Posix.Files as P
 
   import LauncherData
   import DoceBDIFileWork
@@ -39,7 +39,6 @@ module Main where
       { dst = def &= help "Directorio destino para Copia final" &= typDir
        ,move = def &= help "Mover en lugar de copiar"
        ,defaultorder = def &= help "Generar modorder.txt con orden por defecto"
-       ,olddata = def &= help "Generar datos adicionales para el Lanzador antiguo"
       } &= help "Calcula las firmas y genera los ficheros necesarios para ello"
 
   steamwork = SteamCmd
@@ -128,13 +127,85 @@ module Main where
   director (GUI) = undefined
   director (Complete) = undefined
 
-  director (Hashes d m dor o) = do
+  director (Hashes Nothing Nothing Nothing) = do
     p <- makeAbsolute "./steamws.json"
     cfg <- readSteamWorkshopLocalConfig p
-    processRepository $ modspath cfg
+
+    putStr "Procesando repositorios......"
+
+    processRepositories $ modspath cfg
+
+    putStr "terminado"
+    putStrLn ""
 
     return ()
 
+  director (Hashes d Nothing _) = do
+    p <- makeAbsolute "./steamws.json"
+    cfg <- readSteamWorkshopLocalConfig p
+
+    putStr "Procesando repositorios......"
+
+    processRepositories $ modspath cfg
+
+    putStr "terminado"
+    putStrLn ""
+
+    putStr "Copiando, por favor espere..."
+
+    -- Copiamos
+    case d of
+      Just (d) -> do
+        dstE <- doesDirectoryExist d
+
+        if not dstE then
+          createModDirectory d
+        else
+          return ()
+
+        copyModDirectory (modspath cfg) d
+
+        putStr "terminado"
+        putStrLn ""
+
+      _ -> return ()
+
+    return ()
+
+  director (Hashes d m _) = do
+    p <- makeAbsolute "./steamws.json"
+    cfg <- readSteamWorkshopLocalConfig p
+
+    putStr "Procesando repositorios......"
+
+    processRepositories $ modspath cfg
+
+    putStr "terminado"
+    putStrLn ""
+
+    putStr "Procesando, por favor espere..."
+
+    -- Copiamos
+    case d of
+      Just (d) -> do
+        dstE <- doesDirectoryExist d
+
+        if not dstE then
+          createModDirectory d
+        else
+          return ()
+
+        case m of
+          Just (true)  -> moveModDirectory (modspath cfg) d
+          _            -> copyModDirectory (modspath cfg) d
+
+
+        putStr "terminado"
+        putStrLn ""
+
+      _ -> return ()
+
+    return ()
 
   director (Deltas _ _ _) = undefined
 

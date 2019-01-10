@@ -31,8 +31,7 @@ module DoceBDIData (
   data GeneratorSettings = GeneratorSettings  {   gsSourcePath :: String
                                                 , gsDestinyPath :: String
                                                 , gsMoveFiles :: Bool             -- Mueve a destino en lugar de copiar
-                                                , gsDefaultModOrder :: Bool       -- Genera un modorder por defecto, sin orden especifico
-                                                , gsGenerateOldData :: Bool }      -- Genera ademas de los ficheros de la nueva estructura los de la antigua
+                                                , gsDefaultModOrder :: Bool}      -- Genera ademas de los ficheros de la nueva estructura los de la antigua
 
   data SteamWorkshop = SteamWorkshop          { steamcmdpath :: FilePath
                                                , contentsjson :: FilePath
@@ -50,7 +49,7 @@ module DoceBDIData (
     show (DeltaSettings s d dp) = show s ++ "---" ++ show d ++ "---" ++ show dp
 
   instance Show GeneratorSettings where
-    show (GeneratorSettings s d m dm g) = show s ++ "---" ++ show d ++ "---" ++ show m ++ "---" ++ show dm ++ "---" ++ show g
+    show (GeneratorSettings s d m dm) = show s ++ "---" ++ show d ++ "---" ++ show m ++ "---" ++ show dm
 
   instance Show SteamWorkshop where
     show (SteamWorkshop s c m u p) = show s ++ "---" ++ show c ++ "---" ++ show m
@@ -72,11 +71,11 @@ module DoceBDIData (
   -- GeneratorSettings
 
   instance ToJSON GeneratorSettings where
-    toJSON GeneratorSettings {..}     = object [ "gsSourcePath" .= gsSourcePath, "gsDestinyPath" .= gsDestinyPath, "gsMoveFiles" .= gsMoveFiles, "gsDefaultModOrder" .= gsDefaultModOrder, "gsGenerateOldData" .= gsGenerateOldData ]
-    toEncoding GeneratorSettings {..} = pairs $ "gsSourcePath" .= gsSourcePath <> "gsDestinyPath" .= gsDestinyPath <> "gsMoveFiles" .= gsMoveFiles <> "gsDefaultModOrder" .= gsDefaultModOrder <> "gsGenerateOldData" .= gsGenerateOldData
+    toJSON GeneratorSettings {..}     = object [ "gsSourcePath" .= gsSourcePath, "gsDestinyPath" .= gsDestinyPath, "gsMoveFiles" .= gsMoveFiles, "gsDefaultModOrder" .= gsDefaultModOrder]
+    toEncoding GeneratorSettings {..} = pairs $ "gsSourcePath" .= gsSourcePath <> "gsDestinyPath" .= gsDestinyPath <> "gsMoveFiles" .= gsMoveFiles <> "gsDefaultModOrder" .= gsDefaultModOrder
 
   instance FromJSON GeneratorSettings where
-    parseJSON (Object s) = GeneratorSettings <$> s .: "gsSourcePath" <*> s .: "gsDestinyPath" <*>  s .: "gsMoveFiles" <*> s .: "gsDefaultModOrder" <*> s .: "gsGenerateOldData"
+    parseJSON (Object s) = GeneratorSettings <$> s .: "gsSourcePath" <*> s .: "gsDestinyPath" <*>  s .: "gsMoveFiles" <*> s .: "gsDefaultModOrder"
     parseJSON _          = empty
 
   -- SteamWorkshop
@@ -133,7 +132,7 @@ module DoceBDIData (
 
   instance Eq RepoMod where
     r1 == r2 = repomodn r1 == repomodn r2
-    
+
   -- ficheros mantiene la misma estructura
 
 
