@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE CPP #-}
 
 module Main where
 
@@ -12,12 +13,15 @@ module Main where
   import Control.Concurrent
   import System.Directory
   import System.Exit
-  
+  import System.Info
+  import System.Posix.Files as P
+
   import LauncherData
   import DoceBDIFileWork
   import DoceBDIData
   import DoceBDIFileOperations
   import DoceBDIExternalPrograms
+  import DoceBDIClassicGen
   import SteamCmd
 
 
@@ -32,8 +36,7 @@ module Main where
       } &= help "Crea los ficheros Diff entre Base (mas nuevo) y Antiguo (anterior)"
 
   hashes = Hashes
-      { src = def &= help "Directorio de los Addons" &= typDir
-       ,dst = def &= help "Directorio destino para Copia final" &= typDir
+      { dst = def &= help "Directorio destino para Copia final" &= typDir
        ,move = def &= help "Mover en lugar de copiar"
        ,defaultorder = def &= help "Generar modorder.txt con orden por defecto"
        ,olddata = def &= help "Generar datos adicionales para el Lanzador antiguo"
@@ -58,8 +61,26 @@ module Main where
 
     script <- createScript cfg
     fsc <- writeToTmp script
-    steamcommand <- makeAbsolute $ steamcmdpath cfg <> "/steamcmd.exe"
-    existcmd <- doesFileExist steamcommand
+
+    let prgname = if System.Info.os == "windows" then
+                    "/steamcmd.exe"
+                  else
+                    "/steamcmd"
+
+    steamcommand <- makeAbsolute $ steamcmdpath cfg <> prgname
+
+    print steamcommand
+
+    s <- pathIsSymbolicLink steamcommand
+
+    let link = if s then
+                  getSymbolicLinkTarget steamcommand
+               else
+                 return steamcommand
+
+    l <- link
+    existcmd <- doesFileExist l
+
     if existcmd
       then sequence_ []
       else hPutStrLn stdout "Error:\nSteamCmd.exe no se encuentra en la ruta especificada" >> exitFailure
@@ -71,21 +92,8 @@ module Main where
     threadDelay 1500000
     publishRepo cfg
 
-
-  -- Rutina principal
-
-  director :: Launcher -> IO ()
-
-  director (GUI) = undefined
-  director (Complete) = undefined
-  director (Hashes _ _ _ _ _) = undefined
-  director (Deltas _ _ _) = undefined
-
-  director (SteamCmd Nothing Nothing Nothing Nothing Nothing) = do
-    cfg <- readSteamWorkshopLocalConfig "./steamws.json"
-    processSteamCmd cfg
-
-  director (SteamCmd s c m u p) = do
+  getGlobalConfig :: Launcher -> IO SteamWorkshop
+  getGlobalConfig (SteamCmd s c m u p) = do
     cfg <- readSteamWorkshopLocalConfig "./steamws.json"
 
     let cmd = case s of
@@ -111,9 +119,35 @@ module Main where
 
     let newconfig = SteamWorkshop { steamcmdpath = cmd, contentsjson = con, modspath = mpa, user = us, pwd = pa }
 
-    print newconfig
+    return newconfig
 
+  -- Rutina principal
+
+  director :: Launcher -> IO ()
+
+  director (GUI) = undefined
+  director (Complete) = undefined
+
+  director (Hashes d m dor o) = do
+    p <- makeAbsolute "./steamws.json"
+    cfg <- readSteamWorkshopLocalConfig p
+    processRepository $ modspath cfg
+
+    return ()
+
+
+  director (Deltas _ _ _) = undefined
+
+  director (SteamCmd Nothing Nothing Nothing Nothing Nothing) = do
+    p <- makeAbsolute "./steamws.json"
+    cfg <- readSteamWorkshopLocalConfig p
+    processSteamCmd cfg
+
+  director launcher = do
+    newconfig <- getGlobalConfig launcher
+    print newconfig                       -- Debug
     processSteamCmd newconfig
+
   main :: IO ()
   main = do
     hSetBuffering stdin LineBuffering

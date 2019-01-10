@@ -1,6 +1,7 @@
 module DoceBDIFileWork (readJSON,
                         parseFicherosJson,
                         parseRepositoriesJson,
+                        readSteamWorkshopLocalConfig,
                         readRepositorios,
                         readRepomods,
                         writeRepositorios,
@@ -9,11 +10,13 @@ module DoceBDIFileWork (readJSON,
                         parseGeneratorJson,
                         parseSteamCmdJson,
                         parseContentsJson,
-                        writeToTmp) where
+                        writeToTmp,
+                        readFileLazy) where
 
   import System.IO as F
   import Control.Exception
   import System.Directory
+  import System.Exit
   import Data.Aeson
   import Data.Maybe
   import Data.ByteString.Lazy.Char8 as BS
@@ -21,13 +24,32 @@ module DoceBDIFileWork (readJSON,
   import System.IO.Error hiding (catch)
 
   import DoceBDIData
-  
+
 
   readJSON :: String -> IO ByteString
   readJSON fname = do BS.readFile fname `catch` handleExists
     where handleExists e
             | isDoesNotExistError e = return BS.empty
             | otherwise = throwIO e
+
+
+  readSteamWorkshopLocalConfig :: String -> IO SteamWorkshop
+  readSteamWorkshopLocalConfig cfg = do
+    env <- (readJSON cfg >>= parseSteamCmdJson)
+
+    if isNothing env
+      then  F.hPutStrLn stdout "Error:\nSe necesita el fichero steamws.json en la misma carpeta que el ejecutable" >> exitFailure
+    else
+      sequence_ []
+
+    return $ let s = steamcmdpath $ fromJust env
+                 c = contentsjson $ fromJust env
+                 m = modspath $ fromJust env
+                 u = user $ fromJust env
+                 p = pwd $ fromJust env
+             in
+                SteamWorkshop { steamcmdpath = s, contentsjson = c, modspath = m, user = u, pwd = p }
+
 
   parseFicherosJson:: ByteString -> IO (Maybe [Ficheros])
   parseFicherosJson content | content == BS.empty = return (Just [])
@@ -36,7 +58,7 @@ module DoceBDIFileWork (readJSON,
     return setm      -- return IO (Maybe Ficheros)
 
 
-  parseRepositoriesJson:: ByteString -> IO (Maybe [Repositories])
+  parseRepositoriesJson:: ByteString -> IO (Maybe [Repository])
   parseRepositoriesJson content | content == BS.empty = return (Just [])
                                 | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
@@ -97,10 +119,10 @@ module DoceBDIFileWork (readJSON,
     let r = [ RepoMod s | s <- c]
     return r
 
-  writeRepomods :: String -> IO [RepoMod] -> IO ()
+  writeRepomods :: String -> [RepoMod] -> IO ()
   writeRepomods fname repos = do
-    r <- repos
-    let cs = [repomodn x | x <- r]
+    -- r <- repos
+    let cs = [repomodn x | x <- repos]
     writeIdx fname cs
 
   writeToTmp :: String -> IO FilePath
@@ -111,6 +133,13 @@ module DoceBDIFileWork (readJSON,
     F.hPutStr (snd file) content
     F.hClose $ snd file
     return $ fst file
+
+  readFileLazy :: FilePath -> IO ByteString
+  readFileLazy fname = do BS.readFile fname `catch` handleExists
+    where handleExists e
+            | isDoesNotExistError e = return BS.empty
+            | otherwise = throwIO e
+
 
   {-
   readServidores2Txt :: String -> IO String

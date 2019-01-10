@@ -1,0 +1,7 @@
+{
+  "steamCmdPath": "/home/blackraider/steamcmd",
+  "contentsJson": "./contents.json",
+  "modsPath": "/home/blackraider/Mods",
+  "user": "usuario",
+  "pwd": "password"
+}

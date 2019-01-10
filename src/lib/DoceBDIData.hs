@@ -6,14 +6,14 @@ module DoceBDIData (
   Settings(..),
   Entry (..),
   Ficheros(..),
-  Repositories(..),
+  Repository(..),
   Servidores(..),
   Repositorios(..),
   RepoMod(..),
   GeneratorSettings(..),
   SteamWorkshop(..),
-  ContentsJson(..)
-                    ) where
+  ContentsJson(..),
+  Mod(..) ) where
 
   import Data.Aeson
   import Prelude.Compat
@@ -115,8 +115,8 @@ module DoceBDIData (
                       deriving Show
 
   -- Ficheros de Intercambio entre Cliente y Servidor
-  data Mod          = Mod { modName :: String, icon :: Maybe String }
-  data Repositories = Repository { repoName :: String, mods :: [Mod], mustUpdate :: Bool }
+  data Mod          = Mod { modName :: String, icon :: String }
+  data Repository = Repository { repoName :: String, mods :: [Mod], mustUpdate :: Bool }
   data Ficheros     = Ficheros { modFolder :: String, ruta :: String, rfilename :: String, firma :: String, tamano :: Integer}
 
   -- NO Aeson
@@ -130,6 +130,10 @@ module DoceBDIData (
 
   data Repositorios = Repositorios { repon :: String }
   data RepoMod      = RepoMod { repomodn :: String }
+
+  instance Eq RepoMod where
+    r1 == r2 = repomodn r1 == repomodn r2
+    
   -- ficheros mantiene la misma estructura
 
 
@@ -144,7 +148,7 @@ module DoceBDIData (
   instance Show Mod where
     show (Mod m _) = show m
 
-  instance Show Repositories where
+  instance Show Repository where
     show (Repository r _ _) = show r
 
   instance Show Ficheros where
@@ -172,10 +176,10 @@ module DoceBDIData (
     parseJSON (Object s) = Ficheros <$> s .: "Mod" <*> s .: "Ruta" <*> s .: "Nombre" <*> s .: "Firma" <*> s .: "Tamano"
     parseJSON _          = empty
 
-  instance ToJSON Repositories where
+  instance ToJSON Repository where
     toJSON Repository {..}     = object [ "Nombre" .= repoName, "Mods" .= mods, "MustUpdate" .= mustUpdate ]
     toEncoding Repository {..} = pairs $ "Nombre" .= repoName <> "Mods" .= mods <> "MustUpdate" .= mustUpdate
 
-  instance FromJSON Repositories where
+  instance FromJSON Repository where
     parseJSON (Object s) = Repository <$> s .: "Nombre" <*> s .: "Mods" <*> s .: "MustUpdate"
     parseJSON _          = empty

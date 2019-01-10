@@ -1,5 +1,5 @@
 
-module SteamCmd ( readSteamWorkshopLocalConfig,
+module SteamCmd ( --readSteamWorkshopLocalConfig,
                   createScript,
                   publishRepo ) where
 
@@ -18,22 +18,6 @@ module SteamCmd ( readSteamWorkshopLocalConfig,
   import DoceBDIFileWork
   import DoceBDIData
 
-  readSteamWorkshopLocalConfig :: String -> IO SteamWorkshop
-  readSteamWorkshopLocalConfig cfg = do
-    env <- (readJSON cfg >>= parseSteamCmdJson)
-
-    if isNothing env
-      then  hPutStrLn stdout "Error:\nSe necesita el fichero steamws.json en la misma carpeta que el ejecutable" >> exitFailure
-    else
-      sequence_ []
-
-    return $ let s = steamcmdpath $ fromJust env
-                 c = contentsjson $ fromJust env
-                 m = modspath $ fromJust env
-                 u = user $ fromJust env
-                 p = pwd $ fromJust env
-             in
-                SteamWorkshop { steamcmdpath = s, contentsjson = c, modspath = m, user = u, pwd = p }
 
   headerScript :: String -> String -> String -> IO String
   headerScript usr pwd ipath = return $ "@NoPromptForPassword 1\n" <> "login " <> usr <> " " <> pwd <> "\n" <> "force_install_dir " <> ipath <> "\n"

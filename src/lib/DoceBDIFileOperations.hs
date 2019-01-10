@@ -9,7 +9,7 @@ module DoceBDIFileOperations (removeIfExists,
   import System.Directory
   import Control.Exception
   import System.IO.Error hiding (catch)
-
+  
   -- From https://stackoverflow.com/questions/8502201/remove-file-if-it-exists
 
   removeIfExists :: FilePath -> IO ()
