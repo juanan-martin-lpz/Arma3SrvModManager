@@ -3,6 +3,7 @@
 module DoceBDIClassicGen ( processRepository,
                            processRepositories,
                            processAddon,
+                           removeAddon,
                            generateRepositories) where
 
   import Data.Digest.XXHash.FFI
@@ -93,8 +94,16 @@ module DoceBDIClassicGen ( processRepository,
     fichero <- T.readFile (repo </> "ficheros.json")
     let ficheros = decode $ T.encodeUtf8 fichero :: Maybe [Ficheros]
     filtered <- filterM (\x -> pure $ (modFolder x) /= addon) $ fromJust ficheros
-    removeModDirectory $ repo </> addon
+
+    exist <- doesDirectoryExist $ repo </> addon
+
+    if exist then
+      removeModDirectory $ repo </> addon
+    else
+      return ()
+
     moveModDirectory newpath (repo </> addon)
+    
     datos <- processAddon' repo addon
     let global = [filtered, datos]
     T.writeFile (repo </> "ficheros.json") (T.decodeUtf8 . encodePretty' (defConfig {confCompare=keyOrder ["Mod","Ruta","Nombre","Firma","Tamano"]}) $ F.concat global)
@@ -122,3 +131,13 @@ module DoceBDIClassicGen ( processRepository,
     let n = getFileName p
 
     return $ Ficheros a r n h t
+
+  -- repo must be a global path
+  -- params: repo addon pathtoNewAddon
+  removeAddon :: FilePath -> String -> IO ()
+  removeAddon repo addon = do
+    fichero <- T.readFile (repo </> "ficheros.json")
+    let ficheros = decode $ T.encodeUtf8 fichero :: Maybe [Ficheros]
+    filtered <- filterM (\x -> pure $ (modFolder x) /= addon) $ fromJust ficheros
+    removeModDirectory $ repo </> addon
+    T.writeFile (repo </> "ficheros.json") (T.decodeUtf8 . encodePretty' (defConfig {confCompare=keyOrder ["Mod","Ruta","Nombre","Firma","Tamano"]}) $ filtered)
