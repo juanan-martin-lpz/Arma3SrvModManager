@@ -22,7 +22,6 @@ module DoceBDIFileWork (readJSON,
   import Data.ByteString.Lazy.Char8 as BS
   import Data.Text
   import System.IO.Error hiding (catch)
-
   import DoceBDIData
 
 

@@ -14,7 +14,7 @@ module Main where
   import System.Directory
   import System.Exit
   import System.Info
-  import qualified System.Posix.Files as P
+  import qualified System.PosixCompat.Files as P
 
   import LauncherData
   import DoceBDIFileWork

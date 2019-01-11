@@ -17,8 +17,8 @@ module DoceBDIClassicGen ( processRepository,
   import qualified Data.Text.Lazy.Encoding as T
   import Data.Aeson
   import Data.Aeson.Encode.Pretty
-  import System.Posix
-  import System.FilePath.Posix
+  import System.PosixCompat.Files
+  import System.FilePath
   import Data.List as L
   import System.Directory.Tree as T
   import Data.Foldable as F
@@ -27,10 +27,6 @@ module DoceBDIClassicGen ( processRepository,
   import qualified Data.ByteString.Lazy as BS
   import Data.Maybe
 
-  getDirectories :: FilePath -> IO [FilePath]
-  getDirectories p = do
-      let lista = listDirectory p >>= filterM (\x -> doesDirectoryExist $ p </> x)
-      lista
 
   readDir :: FilePath -> IO (T.DirTree FilePath)
   readDir p = do

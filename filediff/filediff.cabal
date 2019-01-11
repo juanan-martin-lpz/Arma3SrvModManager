@@ -14,7 +14,7 @@ maintainer:          bgwines@cs.stanford.edu
 category:            Data
 build-type:          Simple
 extra-source-files:  README.md
-cabal-version:       >=1.10
+cabal-version:       >=2.0
 -- source-repository head
     -- type:     git
     -- location: git://github.com/bgwines/filediff.git
@@ -23,13 +23,6 @@ library
   exposed-modules: Filediff, Filediff.Types, Filediff.Stats, Filediff.Printing, Zora.List
   other-modules:   Filediff.Utils
   -- other-extensions:
-  build-depends:       base >=4 && <5, mtl, time, directory, either, transformers, transformers-either , data-memocombinators, text, data-default,  tasty, tasty-hunit, rainbow, bytestring, threads, hashmap, containers, random, generic-deriving
+  build-depends:       base >=4 && <5, mtl, time, directory, either, transformers, transformers-either , data-memocombinators, text, data-default, rainbow, bytestring, threads, hashmap, containers, random, generic-deriving
   hs-source-dirs:      src
   default-language:    Haskell2010
-
-test-suite test-filediff
-    type:       exitcode-stdio-1.0
-    main-is:    Tests/test-filediff.hs
-    build-depends: base >=4 && <5, tasty, tasty-hunit, mtl, time, directory, either, transformers, filediff, text
-    default-language:    Haskell2010
-    GHC-Options:      -fhpc -hpcdir dist/hpc/mix/test-filediff
