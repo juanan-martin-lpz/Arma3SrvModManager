@@ -6,15 +6,25 @@ module DoceBDIFileOperations (removeIfExists,
                               copyModDirectory,
                               moveModFile,
                               copyModFile,
-                              getDirectories) where
+                              getDirectories,
+                              readDir) where
   import Prelude hiding (catch)
   import System.Directory
   --import qualified Shelly as S
   import Data.Text
   import Control.Exception
   import System.IO.Error hiding (catch)
+  import System.FilePath.Posix
+  import Control.Monad
   import System.Directory.Tree
+  import qualified Path.IO as P
 
+
+  readDir :: FilePath -> IO (DirTree FilePath)
+  readDir p = do
+    (base :/ dt) <- buildL p
+    --return $ T.flattenDir dt
+    return dt
 
   getDirectories :: FilePath -> IO [FilePath]
   getDirectories p = do
@@ -40,13 +50,12 @@ module DoceBDIFileOperations (removeIfExists,
   removeModDirectory mx = removeDirectoryRecursive mx
 
   copyModDirectory :: FilePath -> FilePath -> IO ()
-  --copyModDirectory from to = S.shelly $ S.cp_r (S.fromText $ pack from) (S.fromText $ pack to)
   copyModDirectory from to = do
-    dirs <- getDirectories from
-    ldir <- flattenDir dirs
+    fr <- P.resolveDir' from
+    ty <- P.resolveDir' to
 
-    let dst = map (\s -> (s, (to </> (makeRelative from s))) ldir
-    mapM_ (\s -> copyModFile (fst s) (snd d) ldir
+    P.copyDirRecur fr ty
+
 
   moveModDirectory :: FilePath -> FilePath -> IO ()
   moveModDirectory from to = renamePath from to `catch` handleExists
@@ -62,10 +71,14 @@ module DoceBDIFileOperations (removeIfExists,
 
   copyModFile :: FilePath -> FilePath -> IO ()
   copyModFile from to = do
-    p <- takeDirectory to
+    let p = takeDirectory to
     e <- doesDirectoryExist p
 
     if not e then
       createModDirectory p
-      
+    else
+      return ()
+
+    putStrLn ("Copiando : " ++ (show from))
+
     copyFile from to

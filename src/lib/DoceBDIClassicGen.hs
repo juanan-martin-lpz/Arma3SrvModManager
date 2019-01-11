@@ -28,12 +28,6 @@ module DoceBDIClassicGen ( processRepository,
   import Data.Maybe
 
 
-  readDir :: FilePath -> IO (T.DirTree FilePath)
-  readDir p = do
-    (base :/ dt) <- T.buildL p
-    --return $ T.flattenDir dt
-    return dt
-
   calculateXXHash :: FilePath -> IO String
   calculateXXHash path = do
     content <- readFileLazy path

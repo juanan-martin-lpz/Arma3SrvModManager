@@ -39,6 +39,8 @@ library
                        xxhash-ffi,
                        base-encoding,
                        --shelly,
+                       path,
+                       path-io,
                        unix-compat
   hs-source-dirs:      src/lib
   default-language:    Haskell2010
