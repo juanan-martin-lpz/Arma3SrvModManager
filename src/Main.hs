@@ -69,7 +69,7 @@ module Main where
     script <- createScript cfg
     fsc <- writeToTmp script
 
-    let prgname = if System.Info.os == "windows" then
+    let prgname = if System.Info.os == "mingw32" then
                     "/steamcmd.exe"
                   else
                     "/steamcmd"
