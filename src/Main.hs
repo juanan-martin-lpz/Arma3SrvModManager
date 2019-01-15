@@ -14,6 +14,7 @@ module Main where
   import System.Directory
   import System.Exit
   import System.Info
+  import System.FilePath.Posix
   import qualified System.PosixCompat.Files as P
 
   import LauncherData
@@ -37,9 +38,16 @@ module Main where
 
   hashes = Hashes
       { dst = def &= help "Directorio destino para Copia final" &= typDir
+       ,ado = def &= help "Addon a insertar"
        ,move = def &= help "Mover en lugar de copiar"
        ,defaultorder = def &= help "Generar modorder.txt con orden por defecto"
       } &= help "Calcula las firmas y genera los ficheros necesarios para ello"
+
+  insaddon = InsertAddon
+      { sAdd = def &= help "Directorio del Addon a procesar" &= typDir
+       ,dRep = def &= help "Directorio del repositorio donde insertar el addon" &= typDir
+       ,sAdo = def &= help "Nombre del Addon a insertar"
+      } &= help "Procesa un addon, calcula las firmas y genera los ficheros necesarios para ello"
 
   steamwork = SteamCmd
       { scmdpath = def &= help "Path de SteamCmd" &= typDir
@@ -127,7 +135,7 @@ module Main where
   director (GUI) = undefined
   director (Complete) = undefined
 
-  director (Hashes Nothing Nothing Nothing) = do
+  director (Hashes Nothing Nothing Nothing Nothing) = do
     p <- makeAbsolute "./steamws.json"
     cfg <- readSteamWorkshopLocalConfig p
 
@@ -140,9 +148,11 @@ module Main where
 
     return ()
 
-  director (Hashes d Nothing _) = do
+  director (Hashes d Nothing Nothing _) = do
     p <- makeAbsolute "./steamws.json"
     cfg <- readSteamWorkshopLocalConfig p
+
+    hSetBuffering stdout LineBuffering
 
     putStr "Procesando repositorios......"
 
@@ -172,7 +182,8 @@ module Main where
 
     return ()
 
-  director (Hashes d m _) = do
+
+  director (Hashes d _ m _) = do
     p <- makeAbsolute "./steamws.json"
     cfg <- readSteamWorkshopLocalConfig p
 
@@ -207,6 +218,23 @@ module Main where
 
     return ()
 
+  -- s : directorio del addon
+  -- d : repositorio
+  -- a : nombre del addon
+  director (InsertAddon s d a) = do
+
+    putStr "Procesando, por favor espere..."
+
+    --removeModDirectory $ d </> a
+    processSingleAddon s a d
+    copyModDirectory s $ d </> a
+
+    putStr "terminado"
+    putStrLn ""
+
+    return ()
+
+
   director (Deltas _ _ _) = undefined
 
   director (SteamCmd Nothing Nothing Nothing Nothing Nothing) = do
@@ -224,6 +252,6 @@ module Main where
     hSetBuffering stdin LineBuffering
     hSetBuffering stdout LineBuffering
 
-    options <- cmdArgs (modes [complete, gui, deltas, hashes, steamwork] &= help "Generador de repositorios de Arma 3" &= program "12bdi-launcher" &= summary "12BDI Launcher v1.0\nCross Platform Multitool")
+    options <- cmdArgs (modes [complete, gui, deltas, hashes, insaddon, steamwork] &= help "Generador de repositorios de Arma 3" &= program "12bdi-launcher" &= summary "12BDI Launcher v1.0\nCross Platform Multitool")
 
     director options

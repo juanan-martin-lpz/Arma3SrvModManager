@@ -47,7 +47,14 @@ module DoceBDIFileOperations (removeIfExists,
             | otherwise = throwIO e
 
   removeModDirectory :: FilePath -> IO ()
-  removeModDirectory mx = removeDirectoryRecursive mx
+  removeModDirectory mx = do
+
+    dstE <- doesDirectoryExist mx
+
+    if dstE then
+      removeDirectoryRecursive mx
+    else
+      return ()
 
   copyModDirectory :: FilePath -> FilePath -> IO ()
   copyModDirectory from to = do
