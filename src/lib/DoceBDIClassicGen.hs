@@ -19,21 +19,28 @@ module DoceBDIClassicGen ( processRepository,
   import Data.Aeson.Encode.Pretty
   import System.PosixCompat.Files
   import System.FilePath
+  import System.IO
   import Data.List as L
   import System.Directory.Tree as T
   import Data.Foldable as F
   import System.Directory
   import Control.Monad
+  import Control.Exception
   import qualified Data.ByteString.Lazy as BS
   import Data.Maybe
 
 
   calculateXXHash :: FilePath -> IO String
   calculateXXHash path = do
-    content <- readFileLazy path
-    let hash = xxh64 content 0
-    let hashLE = word64LE hash
-    return . T.unpack $ (C.encode :: Builder -> T.Text) hashLE
+    catch (do
+      content <- readFileLazy path
+      let hash = xxh64 content 0
+      let hashLE = word64LE hash
+      return . T.unpack $ (C.encode :: Builder -> T.Text) hashLE )
+      (\e -> do
+             let err = show (e :: IOException)
+             hPutStr stdout ("Error: No se puede calcular hash -> " ++ path ++ ": " ++ err)
+             return "" )
 
 
   getFileLength :: FilePath -> IO Integer

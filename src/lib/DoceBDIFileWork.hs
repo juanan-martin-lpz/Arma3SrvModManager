@@ -138,6 +138,7 @@ module DoceBDIFileWork (readJSON,
     where handleExists e
             | isDoesNotExistError e = return BS.empty
             | otherwise = throwIO e
+                
 
 
   {-
