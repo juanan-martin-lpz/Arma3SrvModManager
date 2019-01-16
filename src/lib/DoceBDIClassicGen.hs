@@ -45,9 +45,14 @@ module DoceBDIClassicGen ( processRepository,
 
   getFileLength :: FilePath -> IO Integer
   getFileLength entry = do
-   stat <- getFileStatus entry
-   let size = fileSize stat
-   return $ fromIntegral size
+   catch (do
+     stat <- getFileStatus entry
+     let size = fileSize stat
+     return $ fromIntegral size)
+     (\e -> do
+            let err = show (e :: IOException)
+            hPutStr stdout ("Error: No se puede obtener el tamano del fichero -> " ++ entry ++ ": " ++ err)
+            return 0 )
 
   getRelativePath :: FilePath -> FilePath -> FilePath
   getRelativePath base path = do
@@ -72,7 +77,7 @@ module DoceBDIClassicGen ( processRepository,
     T.writeFile (base </> "repositories.json") (T.decodeUtf8 . encodePretty' (defConfig {confCompare=keyOrder ["Nombre","Mods","MustUpdate"]}) $ r)
     m <- mapM (\x -> return $ mods x ) r
     un <- mapM (\r -> return $ RepoMod (modName r)) $ F.concat m
-    writeRepomods (base </> "mods.txt") $ L.nub un
+    writeRepomods (base </> "modlist.txt") $ L.nub un
 
   generateRepository :: FilePath -> FilePath -> IO Repository
   generateRepository base p = do
@@ -137,14 +142,18 @@ module DoceBDIClassicGen ( processRepository,
   -- params: addonName addonPath
   processFile :: String -> FilePath -> FilePath -> IO Ficheros
   processFile a re p = do
-    h <- calculateXXHash p
-    t <- getFileLength p
-    let r = if equalFilePath (re </> a) (takeDirectory p) then
+    p' <- canonicalizePath p
+    re' <- canonicalizePath re
+
+    h <- calculateXXHash p'
+    t <- getFileLength p'
+
+    let r = if equalFilePath (re' </> a) (takeDirectory p) then
               "/"
             else
-              makeRelative (re </> a) (takeDirectory p)
+              makeRelative (re' </> a) (takeDirectory p)
 
-    let n = getFileName p
+    let n = getFileName p'
 
     return $ Ficheros a r n h t
 

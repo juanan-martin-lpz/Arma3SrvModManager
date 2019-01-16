@@ -72,7 +72,7 @@ module Main where
     let prgname = if System.Info.os == "mingw32" then
                     "/steamcmd.exe"
                   else
-                    "/steamcmd"
+                    "/steamcmd.sh"
 
     steamcommand <- makeAbsolute $ steamcmdpath cfg <> prgname
 
@@ -95,7 +95,7 @@ module Main where
 
     let steam = steamcommand <> " + api_logging 'verbose' +runscript " <> fsc
     execProgram $ pack steam
-    removeIfExists fsc
+    --removeIfExists fsc
     threadDelay 1500000
     publishRepo cfg
 
@@ -139,12 +139,11 @@ module Main where
     p <- makeAbsolute "./steamws.json"
     cfg <- readSteamWorkshopLocalConfig p
 
-    putStr "Procesando repositorios......"
+    printText "Procesando repositorios......"
 
     processRepositories $ modspath cfg
 
-    putStr "terminado"
-    putStrLn ""
+    printLine "terminado"
 
     return ()
 
@@ -154,14 +153,13 @@ module Main where
 
     hSetBuffering stdout LineBuffering
 
-    putStr "Procesando repositorios......"
+    printText "Procesando repositorios......"
 
     processRepositories $ modspath cfg
 
-    putStr "terminado"
-    putStrLn ""
+    printLine "terminado"
 
-    putStr "Copiando, por favor espere..."
+    printText "Copiando, por favor espere..."
 
     -- Copiamos
     case d of
@@ -175,8 +173,7 @@ module Main where
 
         copyModDirectory (modspath cfg) d
 
-        putStr "terminado"
-        putStrLn ""
+        printLine "terminado"
 
       _ -> return ()
 
@@ -187,14 +184,13 @@ module Main where
     p <- makeAbsolute "./steamws.json"
     cfg <- readSteamWorkshopLocalConfig p
 
-    putStr "Procesando repositorios......"
+    printText "Procesando repositorios......"
 
     processRepositories $ modspath cfg
 
-    putStr "terminado"
-    putStrLn ""
+    printLine "terminado"
 
-    putStr "Procesando, por favor espere..."
+    printText "Procesando, por favor espere..."
 
     -- Copiamos
     case d of
@@ -211,8 +207,7 @@ module Main where
           _            -> copyModDirectory (modspath cfg) d
 
 
-        putStr "terminado"
-        putStrLn ""
+        printLine "terminado"
 
       _ -> return ()
 
@@ -223,14 +218,13 @@ module Main where
   -- a : nombre del addon
   director (InsertAddon s d a) = do
 
-    putStr "Procesando, por favor espere..."
+    printText "Procesando, por favor espere..."
 
     --removeModDirectory $ d </> a
     processSingleAddon s a d
     copyModDirectory s $ d </> a
 
-    putStr "terminado"
-    putStrLn ""
+    printLine "terminado"
 
     return ()
 

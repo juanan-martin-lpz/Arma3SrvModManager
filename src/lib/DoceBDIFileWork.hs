@@ -11,7 +11,10 @@ module DoceBDIFileWork (readJSON,
                         parseSteamCmdJson,
                         parseContentsJson,
                         writeToTmp,
-                        readFileLazy) where
+                        readFileLazy,
+                        printTo,
+                        printLine,
+                        printText) where
 
   import System.IO as F
   import Control.Exception
@@ -20,7 +23,7 @@ module DoceBDIFileWork (readJSON,
   import Data.Aeson
   import Data.Maybe
   import Data.ByteString.Lazy.Char8 as BS
-  import Data.Text
+  import qualified Data.Text as T
   import System.IO.Error hiding (catch)
   import DoceBDIData
 
@@ -138,8 +141,26 @@ module DoceBDIFileWork (readJSON,
     where handleExists e
             | isDoesNotExistError e = return BS.empty
             | otherwise = throwIO e
-                
 
+
+
+  printTo :: Handle -> String -> Bool -> IO ()
+  printTo handle content endl = do
+    F.hPutStr handle content
+    F.hFlush handle
+
+    if endl then
+      F.hPutStr handle "\n"
+    else
+      return ()
+
+  printLine :: String -> IO ()
+  printLine content = do
+    printTo stdout content True
+
+  printText :: String -> IO ()
+  printText content = do
+    printTo stdout content False
 
   {-
   readServidores2Txt :: String -> IO String
