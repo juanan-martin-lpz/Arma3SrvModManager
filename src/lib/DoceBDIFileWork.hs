@@ -137,11 +137,21 @@ module DoceBDIFileWork (readJSON,
     return $ fst file
 
   readFileLazy :: FilePath -> IO ByteString
-  readFileLazy fname = do BS.readFile fname `catch` handleExists
+  readFileLazy fname = do
+    catch (do
+      BS.readFile fname )
+      (\e -> do
+             let err = show (e :: IOException)
+             printLine ("Error: No se puede abrir el archivo de forma perezosa -> " ++ fname ++ ": " ++ err)
+             return BS.empty )
+
+
+    {-
+    BS.readFile fname `catch` handleExists
     where handleExists e
             | isDoesNotExistError e = return BS.empty
             | otherwise = throwIO e
-
+    -}
 
 
   printTo :: Handle -> String -> Bool -> IO ()
