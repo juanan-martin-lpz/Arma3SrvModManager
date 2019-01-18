@@ -14,7 +14,8 @@ module DoceBDIFileWork (readJSON,
                         readFileLazy,
                         printTo,
                         printLine,
-                        printText) where
+                        printText,
+                        readFileStrict) where
 
   import System.IO as F
   import Control.Exception
@@ -22,13 +23,14 @@ module DoceBDIFileWork (readJSON,
   import System.Exit
   import Data.Aeson
   import Data.Maybe
-  import Data.ByteString.Lazy.Char8 as BS
+  import qualified Data.ByteString.Lazy.Char8 as BS
+  import qualified Data.ByteString.Char8 as BSS
   import qualified Data.Text as T
   import System.IO.Error hiding (catch)
   import DoceBDIData
 
 
-  readJSON :: String -> IO ByteString
+  readJSON :: String -> IO BS.ByteString
   readJSON fname = do BS.readFile fname `catch` handleExists
     where handleExists e
             | isDoesNotExistError e = return BS.empty
@@ -53,38 +55,38 @@ module DoceBDIFileWork (readJSON,
                 SteamWorkshop { steamcmdpath = s, contentsjson = c, modspath = m, user = u, pwd = p }
 
 
-  parseFicherosJson:: ByteString -> IO (Maybe [Ficheros])
+  parseFicherosJson:: BS.ByteString -> IO (Maybe [Ficheros])
   parseFicherosJson content | content == BS.empty = return (Just [])
                             | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
 
-  parseRepositoriesJson:: ByteString -> IO (Maybe [Repository])
+  parseRepositoriesJson:: BS.ByteString -> IO (Maybe [Repository])
   parseRepositoriesJson content | content == BS.empty = return (Just [])
                                 | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
-  parseGeneratorJson:: ByteString -> IO (Maybe GeneratorSettings)
+  parseGeneratorJson:: BS.ByteString -> IO (Maybe GeneratorSettings)
   parseGeneratorJson content | content == BS.empty = return Nothing
                              | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
-  parseDeltaJson:: ByteString -> IO (Maybe Settings)
+  parseDeltaJson:: BS.ByteString -> IO (Maybe Settings)
   parseDeltaJson content | content == BS.empty = return Nothing
                          | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
-  parseSteamCmdJson:: ByteString -> IO (Maybe SteamWorkshop)
+  parseSteamCmdJson:: BS.ByteString -> IO (Maybe SteamWorkshop)
   parseSteamCmdJson content | content == BS.empty = return Nothing
                             | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
     return setm      -- return IO (Maybe Ficheros)
 
-  parseContentsJson:: ByteString -> IO (Maybe [ContentsJson])
+  parseContentsJson:: BS.ByteString -> IO (Maybe [ContentsJson])
   parseContentsJson content | content == BS.empty = return (Just [])
                             | otherwise = do
     let setm = decode content    -- setm = Maybe Ficheros || Nothing
@@ -136,7 +138,7 @@ module DoceBDIFileWork (readJSON,
     F.hClose $ snd file
     return $ fst file
 
-  readFileLazy :: FilePath -> IO ByteString
+  readFileLazy :: FilePath -> IO BS.ByteString
   readFileLazy fname = do
     catch (do
       BS.readFile fname )
@@ -145,7 +147,19 @@ module DoceBDIFileWork (readJSON,
              printLine ("Error: No se puede abrir el archivo de forma perezosa -> " ++ fname ++ ": " ++ err)
              return BS.empty )
 
-
+  readFileStrict :: FilePath -> IO BSS.ByteString
+  readFileStrict fname = do
+    bracket(openBinaryFile fname ReadMode)
+            hClose
+            (\h -> do
+              hSetBinaryMode h True
+              content <- BSS.hGetContents h
+              return content
+              `catch` (\e -> do
+                          let err = show (e :: IOException)
+                          printLine ("Error al leer el archivo :" ++ fname ++ " : " ++ err)
+                          return BSS.empty)
+            )
     {-
     BS.readFile fname `catch` handleExists
     where handleExists e

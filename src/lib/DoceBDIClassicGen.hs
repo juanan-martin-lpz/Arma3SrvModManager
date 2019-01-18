@@ -33,7 +33,7 @@ module DoceBDIClassicGen ( processRepository,
   calculateXXHash :: FilePath -> IO String
   calculateXXHash path = do
     catch (do
-      content <- readFileLazy path
+      content <- readFileStrict path
       let hash = xxh64 content 0
       let hashLE = word64LE hash
       return . T.unpack $ (C.encode :: Builder -> T.Text) hashLE )
