@@ -34,7 +34,7 @@ library
                        cmdargs,
                        directory,
                        filepath,
-                       filediff,
+                       --filediff,
                        directory-tree,
                        xxhash-ffi,
                        base-encoding,
