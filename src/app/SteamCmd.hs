@@ -13,10 +13,10 @@ module SteamCmd ( --readSteamWorkshopLocalConfig,
   import System.Directory
 
   import LauncherData
-  import DoceBDIExternalPrograms
-  import DoceBDIFileOperations
-  import DoceBDIFileWork
-  import DoceBDIData
+  import ArmaSMMExternalPrograms
+  import ArmaSMMFileOperations
+  import ArmaSMMFileWork
+  import ArmaSMMData
 
 
   headerScript :: String -> String -> String -> IO String

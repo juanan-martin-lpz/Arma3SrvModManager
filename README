@@ -34,11 +34,11 @@ TAREAS
 
 DEPENDENCIAS
 
-Se ha anadido el paquete filediff (https://github.com/bgwines/filediff) y se ha modificado para que compile con la version 8.4.4 de ghc. Ademas se ha inluido common
+Se ha anadido el paquete filediff (https://github.com/bgwines/filediff) y se ha modificado para que compile con la version 8.4.4 de ghc. Ademas se ha inluido como
 parte de ese proceso el fichero List.hs del paquete Zora (https://github.com/bgwines/zora).
-Al paquete filediff se le han anadido en el fichero Zora/Types.hs los imports necesarios para que compilara, al fichero Filediff/Types.hs se le han anadido las instancias
-de Semigroup para ListDiff, Diff, FileDiff y FileChange sin las funciones <> respectivas, ademas de los imports necesarios para compilar y al fichero Filediff.hs se le han
-anadido los imports necesarios para compilar.
+
+Al paquete filediff se le han anadido en el fichero Zora/Types.hs los imports necesarios para que compilara, al fichero Filediff/Types.hs se le han anadido las instancias de Semigroup para ListDiff, Diff, FileDiff y FileChange sin las funciones <> respectivas, ademas de los imports necesarios para compilar y al fichero Filediff.hs se le han anadido los imports necesarios para compilar.
+
 Esta usando transformers-either-0.1.1 como dependencia extra y se ha eliminado la dependencia de Zora incuyendo Zora.List dentro del proyecto.
 
 

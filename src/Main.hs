@@ -18,11 +18,11 @@ module Main where
   import qualified System.PosixCompat.Files as P
 
   import LauncherData
-  import DoceBDIFileWork
-  import DoceBDIData
-  import DoceBDIFileOperations
-  import DoceBDIExternalPrograms
-  import DoceBDIClassicGen
+  import ArmaSMMFileWork
+  import ArmaSMMData
+  import ArmaSMMFileOperations
+  import ArmaSMMExternalPrograms
+  import ArmaSMMClassicGen
   import SteamCmd
 
 
