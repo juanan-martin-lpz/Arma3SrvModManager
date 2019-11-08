@@ -1,3 +1,44 @@
+ARMA3 SERVER MOD MANAGER
+
+El objeto del programa es mantener una lista de mods para el juego arma 3 (aunque en realidad serviria para cualquier otro juego que dispusiera de mods).
+
+Se requiere el programa steamcmd.exe para la descarga de los addons en cuestion.
+
+Los addons se organizan en repositorios que pueden actualizarse todos a la vez o por separado y que son cargados desde contents.json.
+Por cada fichero descargado se calcula un hash basado en el algoritomo xxhash y se genera un archivo json por cada addon (ficheros.json)
+que es util para el cliente de descarga (Arma3LauncherCli (no disponible de momento)).
+Hay dos ficheros de configuracion, steamws.json nos indica la ruta de steamcmd y generator.json nos indica los datos para la descarga
+y copia final de los repositorios.
+
+IDEAS GENERALES
+
+En cuanto a la gestion de servidores de arma existen dos corrientes principales: mantener el servidor con el cliente de steam y que el servidor
+se actualice de forma automatica (con reinicios manuales) lo que habilita que los jugadores se puedan actualizar en base al sistema de subscripciones
+de steam y los que prefieren mantener los servidores mas "estaticos", probando las actualizaciones de los addons antes en otros servidores de prueba
+antes de integrarlas en los de juego, que los deshabilita para que los jugadores puedan usar el sistema de subscripciones.
+
+El proyecto Arma3LauncherCli y este proyecto tratan ese caso especifico, aunque tambien puede ocuparse del mantenimiento del servidor en el primer caso
+si es ejecutado con una tarea cron todos los dias.
+
+EL PLAN 
+
+El cliente antiguo se encargaba tanto de la generacion de los ficheros necesarios en el servidor como de la parte que afectaba al jugador. Este proyecto separa
+ambos casos.
+El plan es tener un programa capaz de:
+
+  * Descargar una serie de addons de lo servidores de Steam.
+  * Generar la informacion necesaria para poder asegurarnos que servidor y clientes
+    cuentan con los mismos archivos y que no han sido manipulados.
+  * Facilitar la copia de los artefactos finales en los lugares que dictamine el administrador del servidor
+    (generalmente sus localizaciones de descarga).
+  * Habilitar medios para la generacion de ficheros delta entre versiones de addons para facilitar su descarga.
+  * Control de la ejecucion de los servidores.
+  * Proveer de un sistema que facilite informacion a los administradores acerca del estado de los servidores.
+
+Opcionalmente contaria con interfaz grafica basada en Gtk3 y soporte para interpretar codigo Javascript si el Lenguaje de Apoyo
+no llega a buen puerto.
+ 
+
 ESTRUCTURAS DE DATOS
 
   ficheros.json             -> Completo
@@ -29,8 +70,8 @@ TAREAS
   Comprobador de Versiones  -> Sin iniciar
   Lenguaje de Apoyo         -> Sin iniciar
   Interprete Len. Apo.      -> Sin iniciar
-  *Soporte Javascript       -> Sin iniciar      -- Opcionales
-  *Extensiones QML          -> Sin iniciar
+  *Soporte Javascript       -> Sin iniciar      -- Opcional
+  *Interfaz grafica         -> Sin iniciar
 
 DEPENDENCIAS
 
