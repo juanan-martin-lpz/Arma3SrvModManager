@@ -100,14 +100,17 @@ module ArmaSMMClassicGen ( processRepository,
 
   -- repo must be a global path
   -- params: repo addon pathtoNewAddon
-  processSingleAddon :: FilePath -> String -> FilePath -> IO ()
+  processSingleAddon :: Maybe FilePath -> Maybe String -> Maybe FilePath -> IO ()
+  processSingleAddon Nothing _ _ = return ()
+  processSingleAddon _ Nothing _ = return ()
+  processSingleAddon _ _ Nothing = return ()
   processSingleAddon newpath addon repo = do
-    fichero <- T.readFile (repo </> "ficheros.json")
+    fichero <- T.readFile (fromJust repo </> "ficheros.json")
     let ficheros = decode $ T.encodeUtf8 fichero :: Maybe [Ficheros]
-    filtered <- filterM (\x -> pure $ (modFolder x) /= addon) $ fromJust ficheros
+    filtered <- filterM (\x -> pure $ (modFolder x) /= fromJust addon) $ fromJust ficheros
 
-    r' <- canonicalizePath $ repo </> addon
-    n' <- canonicalizePath newpath
+    r' <- canonicalizePath $ fromJust repo </> fromJust addon
+    n' <- canonicalizePath $ fromJust newpath
 
     de <- doesDirectoryExist r'
 
@@ -118,16 +121,16 @@ module ArmaSMMClassicGen ( processRepository,
 
     copyModDirectory n' r'
 
-    exist <- doesDirectoryExist $ repo </> addon
+    exist <- doesDirectoryExist $ fromJust repo </> fromJust addon
 
     if exist then
-      removeModDirectory $ repo </> addon
+      removeModDirectory $ fromJust repo </> fromJust addon
     else
       return ()
 
-    datos <- processAddon' repo addon
+    datos <- processAddon' (fromJust repo) (fromJust addon)
     let global = [filtered, datos]
-    T.writeFile (repo </> "ficheros.json") (T.decodeUtf8 . encodePretty' (defConfig {confCompare=keyOrder ["Mod","Ruta","Nombre","Firma","Tamano"]}) $ F.concat global)
+    T.writeFile (fromJust repo </> "ficheros.json") (T.decodeUtf8 . encodePretty' (defConfig {confCompare=keyOrder ["Mod","Ruta","Nombre","Firma","Tamano"]}) $ F.concat global)
 
 
   -- repo must be a global path

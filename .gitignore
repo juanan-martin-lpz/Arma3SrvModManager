@@ -1,5 +1,6 @@
 **/.cabal-sandbox
 **/.stack-work
 **/dist
+**/dist-newstyle
 **/*~
 

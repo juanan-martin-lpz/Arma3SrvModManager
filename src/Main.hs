@@ -1,5 +1,8 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE DuplicateRecordFields #-}
+
+
 
 module Main where
 
@@ -44,9 +47,9 @@ module Main where
       } &= help "Calcula las firmas y genera los ficheros necesarios para ello"
 
   insaddon = InsertAddon
-      { sAdd = def &= help "Directorio del Addon a procesar" &= typDir
-       ,dRep = def &= help "Directorio del repositorio donde insertar el addon" &= typDir
-       ,sAdo = def &= help "Nombre del Addon a insertar"
+      { src = def &= help "Directorio del Addon a procesar" &= typDir
+       ,dst = def &= help "Directorio del repositorio donde insertar el addon" &= typDir
+       ,ado = def &= help "Nombre del Addon a insertar"
       } &= help "Procesa un addon, calcula las firmas y genera los ficheros necesarios para ello"
 
   steamwork = SteamCmd
@@ -222,7 +225,7 @@ module Main where
 
     --removeModDirectory $ d </> a
     processSingleAddon s a d
-    copyModDirectory s $ d </> a
+    copyModDirectory (fromJust s)  (fromJust d </> fromJust a)
 
     printLine "terminado"
 
@@ -246,6 +249,6 @@ module Main where
     hSetBuffering stdin LineBuffering
     hSetBuffering stdout LineBuffering
 
-    options <- cmdArgs (modes [complete, gui, deltas, hashes, insaddon, steamwork] &= help "Generador de repositorios de Arma 3" &= program "12bdi-launcher" &= summary "12BDI Launcher v1.0\nCross Platform Multitool")
+    options <- cmdArgs (modes [complete, gui, deltas, hashes, insaddon, steamwork] &= help "Generador de repositorios de Arma 3" &= program "armasrvmm" &= summary "Arma Srv Mod Manager v1.0\nCross Platform Multitool")
 
     director options
